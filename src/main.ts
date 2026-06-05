@@ -15,7 +15,8 @@ async function bootstrap() {
   });
 
   const configService = app.get(ConfigService);
-  const port = configService.get<number>('PORT', 3001);
+  // const port = configService.get<number>('PORT', 3001);
+  const port = process.env.PORT || 3001;
   const frontendUrl = configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
 
   // Static Assets routing for file uploads
@@ -104,9 +105,10 @@ async function bootstrap() {
     swaggerOptions: { persistAuthorization: true },
   });
 
-  await app.listen(port);
-  console.log(`🚀 WMS Backend running on http://localhost:${port}`);
-  console.log(`📚 Swagger docs: http://localhost:${port}/api/docs`);
+  await app.listen(port, '0.0.0.0');
+
+  console.log(`🚀 WMS Backend running on port ${port}`);
+  console.log(`📚 Swagger docs available at /api/docs`);
 }
 
 bootstrap();

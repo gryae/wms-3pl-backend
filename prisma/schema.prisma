@@ -1,0 +1,972 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =============================================
+// ENUMS
+// =============================================
+
+enum UserRole {
+  WAREHOUSE_ADMIN
+  SELLER
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+enum SellerStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum InboundType {
+  NEW
+  RETURN
+}
+
+enum InboundStatus {
+  DRAFT
+  SUBMITTED
+  RECEIVING
+  COMPLETED
+  CANCELLED
+}
+
+enum OutboundType {
+  MARKETPLACE
+  SOCIAL_COMMERCE
+  MANUAL
+}
+
+enum OutboundStatus {
+  DRAFT
+  SUBMITTED
+  ALLOCATED
+  PICKING
+  PACKING
+  READY_TO_SHIP
+  SHIPPED
+  COMPLETED
+  CANCELLED
+}
+
+enum ReturnStatus {
+  SUBMITTED
+  INSPECTING
+  COMPLETED
+  CANCELLED
+}
+
+enum ManifestStatus {
+  OPEN
+  CLOSED
+  CANCELLED
+}
+
+enum StockOpnameStatus {
+  DRAFT
+  COUNTING
+  COMPLETED
+  CANCELLED
+}
+
+enum MovementType {
+  INBOUND
+  OUTBOUND
+  RETURN
+  ADJUSTMENT
+  RESERVATION
+  RELEASE
+}
+
+enum InventoryStatus {
+  AVAILABLE
+  RESERVED
+  DAMAGED
+  REJECT
+}
+
+enum NotificationType {
+  INBOUND_SUBMITTED
+  INBOUND_COMPLETED
+  OUTBOUND_SUBMITTED
+  PICKING_ASSIGNED
+  PACKING_ASSIGNED
+  SHIPMENT_COMPLETED
+  RETURN_RECEIVED
+  STOCK_OPNAME_COMPLETED
+  GENERAL
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  STATUS_CHANGE
+  INVENTORY_CHANGE
+  PERMISSION_CHANGE
+  LOGIN
+  LOGOUT
+}
+
+enum FileType {
+  PDF
+  IMAGE
+  EXCEL
+  CSV
+  OTHER
+}
+
+enum Language {
+  EN
+  ID
+}
+
+enum PickTaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum PackTaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+// =============================================
+// AUTH & USERS
+// =============================================
+
+model User {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  password     String
+  name         String
+  phone        String?
+  role         UserRole
+  status       UserStatus @default(ACTIVE)
+  sellerId     String?
+  seller       Seller?    @relation(fields: [sellerId], references: [id])
+  avatarUrl    String?
+  lastLoginAt  DateTime?
+  deletedAt    DateTime?
+
+  preferences  UserPreference?
+  sessions     Session[]
+  refreshTokens RefreshToken[]
+  passwordResets PasswordReset[]
+
+  // Activity
+  inboundsCreated   Inbound[]    @relation("InboundCreatedBy")
+  inboundsReceived  Inbound[]    @relation("InboundReceivedBy")
+  outboundsCreated  Outbound[]   @relation("OutboundCreatedBy")
+  pickTasksAssigned PickTask[]   @relation("PickTaskAssignee")
+  packTasksAssigned PackTask[]   @relation("PackTaskAssignee")
+  returnsCreated    Return[]     @relation("ReturnCreatedBy")
+  returnsInspected  Return[]     @relation("ReturnInspectedBy")
+  manifestsCreated  Manifest[]   @relation("ManifestCreatedBy")
+  opnamesCreated    StockOpname[] @relation("OpnameCreatedBy")
+  auditLogs         AuditLog[]
+  notifications     Notification[]
+  activityTimelines ActivityTimeline[]
+  inventoryAdjustments InventoryAdjustment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model UserPreference {
+  id       String   @id @default(cuid())
+  userId   String   @unique
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  language Language @default(EN)
+  theme    String   @default("light")
+  timezone String   @default("Asia/Jakarta")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("user_preferences")
+}
+
+model Session {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token      String   @unique
+  ipAddress  String?
+  userAgent  String?
+  expiresAt  DateTime
+  isRevoked  Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("sessions")
+}
+
+model RefreshToken {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token      String   @unique
+  isRevoked  Boolean  @default(false)
+  expiresAt  DateTime
+  ipAddress  String?
+  userAgent  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("refresh_tokens")
+}
+
+model PasswordReset {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@map("password_resets")
+}
+
+model Permission {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  name        String
+  description String?
+  module      String
+  rolePermissions RolePermission[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("permissions")
+}
+
+model RolePermission {
+  id           String     @id @default(cuid())
+  role         UserRole
+  permissionId String
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([role, permissionId])
+  @@map("role_permissions")
+}
+
+// =============================================
+// SELLERS
+// =============================================
+
+model Seller {
+  id          String       @id @default(cuid())
+  code        String       @unique
+  name        String
+  address     String?
+  phone       String?
+  email       String?
+  status      SellerStatus @default(ACTIVE)
+  logoUrl     String?
+  deletedAt   DateTime?
+
+  users       User[]
+  products    Product[]
+  inbounds    Inbound[]
+  outbounds   Outbound[]
+  returns     Return[]
+  inventoryBalances InventoryBalance[]
+  inventoryMovements InventoryMovement[]
+  notifications Notification[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("sellers")
+}
+
+// =============================================
+// PRODUCTS
+// =============================================
+
+model Product {
+  id          String        @id @default(cuid())
+  sellerId    String
+  seller      Seller        @relation(fields: [sellerId], references: [id])
+  sku         String
+  barcode     String?
+  name        String
+  description String?
+  hpp         Decimal       @default(0) @db.Decimal(15, 2)
+  length      Decimal?      @db.Decimal(10, 2)
+  width       Decimal?      @db.Decimal(10, 2)
+  height      Decimal?      @db.Decimal(10, 2)
+  weight      Decimal?      @db.Decimal(10, 3)
+  unit        String        @default("pcs")
+  status      ProductStatus @default(ACTIVE)
+  imageUrl    String?
+  deletedAt   DateTime?
+
+  inboundItems    InboundItem[]
+  outboundItems   OutboundItem[]
+  returnItems     ReturnItem[]
+  inventoryBalances InventoryBalance[]
+  inventoryMovements InventoryMovement[]
+  opnameItems     StockOpnameItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([sellerId, sku])
+  @@index([sellerId])
+  @@index([barcode])
+  @@map("products")
+}
+
+// =============================================
+// COURIERS
+// =============================================
+
+model Courier {
+  id        String  @id @default(cuid())
+  code      String  @unique
+  name      String
+  logo      String?
+  isActive  Boolean @default(true)
+  deletedAt DateTime?
+
+  outbounds Outbound[]
+  manifests Manifest[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("couriers")
+}
+
+// =============================================
+// INVENTORY
+// =============================================
+
+model InventoryBalance {
+  id        String          @id @default(cuid())
+  sellerId  String
+  seller    Seller          @relation(fields: [sellerId], references: [id])
+  productId String
+  product   Product         @relation(fields: [productId], references: [id])
+  available Int             @default(0)
+  reserved  Int             @default(0)
+  damaged   Int             @default(0)
+  reject    Int             @default(0)
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([sellerId, productId])
+  @@index([sellerId])
+  @@index([productId])
+  @@map("inventory_balances")
+}
+
+model InventoryMovement {
+  id            String        @id @default(cuid())
+  sellerId      String
+  seller        Seller        @relation(fields: [sellerId], references: [id])
+  productId     String
+  product       Product       @relation(fields: [productId], references: [id])
+  movementType  MovementType
+  quantity      Int
+  fromStatus    InventoryStatus?
+  toStatus      InventoryStatus?
+  referenceType String?
+  referenceId   String?
+  referenceNo   String?
+  notes         String?
+  createdBy     String?
+
+  createdAt DateTime @default(now())
+
+  @@index([sellerId])
+  @@index([productId])
+  @@index([referenceId])
+  @@index([movementType])
+  @@map("inventory_movements")
+}
+
+model InventoryAdjustment {
+  id          String          @id @default(cuid())
+  sellerId    String
+  productId   String
+  adjustedBy  String
+  user        User            @relation(fields: [adjustedBy], references: [id])
+  status      InventoryStatus
+  quantity    Int
+  reason      String
+  notes       String?
+  referenceId String?
+
+  createdAt DateTime @default(now())
+
+  @@index([sellerId])
+  @@index([productId])
+  @@map("inventory_adjustments")
+}
+
+// =============================================
+// INBOUND
+// =============================================
+
+model Inbound {
+  id             String        @id @default(cuid())
+  inboundNo      String        @unique
+  sellerId       String
+  seller         Seller        @relation(fields: [sellerId], references: [id])
+  type           InboundType   @default(NEW)
+  status         InboundStatus @default(DRAFT)
+  referenceNo    String?
+  notes          String?
+  receivedAt     DateTime?
+  completedAt    DateTime?
+  cancelledAt    DateTime?
+  cancelReason   String?
+
+  createdById    String
+  createdBy      User         @relation("InboundCreatedBy", fields: [createdById], references: [id])
+  receivedById   String?
+  receivedBy     User?        @relation("InboundReceivedBy", fields: [receivedById], references: [id])
+
+  items          InboundItem[]
+  timelines      InboundTimeline[]
+  files          FileUpload[]   @relation("InboundFiles")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+
+  @@index([sellerId])
+  @@index([status])
+  @@map("inbounds")
+}
+
+model InboundItem {
+  id           String  @id @default(cuid())
+  inboundId    String
+  inbound      Inbound @relation(fields: [inboundId], references: [id], onDelete: Cascade)
+  productId    String
+  product      Product @relation(fields: [productId], references: [id])
+  expectedQty  Int
+  receivedQty  Int     @default(0)
+  rejectQty    Int     @default(0)
+  notes        String?
+
+  @@index([inboundId])
+  @@index([productId])
+  @@map("inbound_items")
+}
+
+model InboundTimeline {
+  id         String @id @default(cuid())
+  inboundId  String
+  inbound    Inbound @relation(fields: [inboundId], references: [id], onDelete: Cascade)
+  action     String
+  notes      String?
+  userId     String?
+  userName   String?
+
+  createdAt DateTime @default(now())
+
+  @@index([inboundId])
+  @@map("inbound_timelines")
+}
+
+// =============================================
+// OUTBOUND
+// =============================================
+
+model Outbound {
+  id               String         @id @default(cuid())
+  outboundNo       String         @unique
+  sellerId         String
+  seller           Seller         @relation(fields: [sellerId], references: [id])
+  type             OutboundType   @default(MANUAL)
+  status           OutboundStatus @default(DRAFT)
+  recipientName    String
+  recipientPhone   String
+  recipientAddress String
+  recipientCity    String?
+  recipientProvince String?
+  recipientPostcode String?
+  courierId        String?
+  courier          Courier?       @relation(fields: [courierId], references: [id])
+  trackingNumber   String?
+  shippingCost     Decimal?       @db.Decimal(15, 2)
+  codAmount        Decimal?       @db.Decimal(15, 2)
+  notes            String?
+  pickedAt         DateTime?
+  packedAt         DateTime?
+  shippedAt        DateTime?
+  completedAt      DateTime?
+  cancelledAt      DateTime?
+  cancelReason     String?
+
+  createdById      String
+  createdBy        User           @relation("OutboundCreatedBy", fields: [createdById], references: [id])
+
+  items            OutboundItem[]
+  timelines        OutboundTimeline[]
+  pickTask         PickTask?
+  packTask         PackTask?
+  manifestItems    ManifestItem[]
+  files            FileUpload[]   @relation("OutboundFiles")
+  returns          Return[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+
+  @@index([sellerId])
+  @@index([status])
+  @@index([trackingNumber])
+  @@map("outbounds")
+}
+
+model OutboundItem {
+  id          String   @id @default(cuid())
+  outboundId  String
+  outbound    Outbound @relation(fields: [outboundId], references: [id], onDelete: Cascade)
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id])
+  quantity    Int
+  pickedQty   Int      @default(0)
+  packedQty   Int      @default(0)
+  notes       String?
+
+  @@index([outboundId])
+  @@index([productId])
+  @@map("outbound_items")
+}
+
+model OutboundTimeline {
+  id          String   @id @default(cuid())
+  outboundId  String
+  outbound    Outbound @relation(fields: [outboundId], references: [id], onDelete: Cascade)
+  action      String
+  notes       String?
+  userId      String?
+  userName    String?
+
+  createdAt DateTime @default(now())
+
+  @@index([outboundId])
+  @@map("outbound_timelines")
+}
+
+// =============================================
+// PICKING
+// =============================================
+
+model PickTask {
+  id          String         @id @default(cuid())
+  outboundId  String         @unique
+  outbound    Outbound       @relation(fields: [outboundId], references: [id])
+  assigneeId  String?
+  assignee    User?          @relation("PickTaskAssignee", fields: [assigneeId], references: [id])
+  status      PickTaskStatus @default(PENDING)
+  startedAt   DateTime?
+  completedAt DateTime?
+  notes       String?
+
+  items       PickTaskItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([assigneeId])
+  @@index([status])
+  @@map("pick_tasks")
+}
+
+model PickTaskItem {
+  id           String   @id @default(cuid())
+  pickTaskId   String
+  pickTask     PickTask @relation(fields: [pickTaskId], references: [id], onDelete: Cascade)
+  productId    String
+  requiredQty  Int
+  pickedQty    Int      @default(0)
+  location     String?
+  notes        String?
+
+  @@index([pickTaskId])
+  @@map("pick_task_items")
+}
+
+// =============================================
+// PACKING
+// =============================================
+
+model PackTask {
+  id          String         @id @default(cuid())
+  outboundId  String         @unique
+  outbound    Outbound       @relation(fields: [outboundId], references: [id])
+  assigneeId  String?
+  assignee    User?          @relation("PackTaskAssignee", fields: [assigneeId], references: [id])
+  status      PackTaskStatus @default(PENDING)
+  startedAt   DateTime?
+  completedAt DateTime?
+  boxCount    Int?
+  weight      Decimal?       @db.Decimal(10, 3)
+  notes       String?
+
+  items       PackTaskItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([assigneeId])
+  @@index([status])
+  @@map("pack_tasks")
+}
+
+model PackTaskItem {
+  id          String   @id @default(cuid())
+  packTaskId  String
+  packTask    PackTask @relation(fields: [packTaskId], references: [id], onDelete: Cascade)
+  productId   String
+  quantity    Int
+  packedQty   Int      @default(0)
+  notes       String?
+
+  @@index([packTaskId])
+  @@map("pack_task_items")
+}
+
+// =============================================
+// RETURNS
+// =============================================
+
+model Return {
+  id           String       @id @default(cuid())
+  returnNo     String       @unique
+  sellerId     String
+  seller       Seller       @relation(fields: [sellerId], references: [id])
+  outboundId   String?
+  outbound     Outbound?    @relation(fields: [outboundId], references: [id])
+  status       ReturnStatus @default(SUBMITTED)
+  reason       String
+  notes        String?
+  inspectedAt  DateTime?
+  completedAt  DateTime?
+
+  createdById  String
+  createdBy    User         @relation("ReturnCreatedBy", fields: [createdById], references: [id])
+  inspectedById String?
+  inspectedBy  User?        @relation("ReturnInspectedBy", fields: [inspectedById], references: [id])
+
+  items        ReturnItem[]
+  timelines    ReturnTimeline[]
+  files        FileUpload[]  @relation("ReturnFiles")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([sellerId])
+  @@index([status])
+  @@map("returns")
+}
+
+model ReturnItem {
+  id           String  @id @default(cuid())
+  returnId     String
+  return       Return  @relation(fields: [returnId], references: [id], onDelete: Cascade)
+  productId    String
+  product      Product @relation(fields: [productId], references: [id])
+  quantity     Int
+  goodQty      Int     @default(0)
+  damagedQty   Int     @default(0)
+  rejectQty    Int     @default(0)
+  notes        String?
+
+  @@index([returnId])
+  @@map("return_items")
+}
+
+model ReturnTimeline {
+  id        String @id @default(cuid())
+  returnId  String
+  return    Return @relation(fields: [returnId], references: [id], onDelete: Cascade)
+  action    String
+  notes     String?
+  userId    String?
+  userName  String?
+
+  createdAt DateTime @default(now())
+
+  @@index([returnId])
+  @@map("return_timelines")
+}
+
+// =============================================
+// MANIFEST
+// =============================================
+
+model Manifest {
+  id           String         @id @default(cuid())
+  manifestNo   String         @unique
+  courierId    String
+  courier      Courier        @relation(fields: [courierId], references: [id])
+  status       ManifestStatus @default(OPEN)
+  date         DateTime       @default(now())
+  notes        String?
+  closedAt     DateTime?
+
+  createdById  String
+  createdBy    User           @relation("ManifestCreatedBy", fields: [createdById], references: [id])
+
+  items        ManifestItem[]
+  files        FileUpload[]   @relation("ManifestFiles")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([courierId])
+  @@index([status])
+  @@map("manifests")
+}
+
+model ManifestItem {
+  id          String   @id @default(cuid())
+  manifestId  String
+  manifest    Manifest @relation(fields: [manifestId], references: [id], onDelete: Cascade)
+  outboundId  String
+  outbound    Outbound @relation(fields: [outboundId], references: [id])
+
+  @@unique([manifestId, outboundId])
+  @@index([manifestId])
+  @@map("manifest_items")
+}
+
+// =============================================
+// STOCK OPNAME
+// =============================================
+
+model StockOpname {
+  id          String            @id @default(cuid())
+  opnameNo    String            @unique
+  sellerId    String
+  status      StockOpnameStatus @default(DRAFT)
+  notes       String?
+  countedAt   DateTime?
+  completedAt DateTime?
+
+  createdById String
+  createdBy   User              @relation("OpnameCreatedBy", fields: [createdById], references: [id])
+
+  items       StockOpnameItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([sellerId])
+  @@index([status])
+  @@map("stock_opnames")
+}
+
+model StockOpnameItem {
+  id          String      @id @default(cuid())
+  opnameId    String
+  opname      StockOpname @relation(fields: [opnameId], references: [id], onDelete: Cascade)
+  productId   String
+  product     Product     @relation(fields: [productId], references: [id])
+  systemQty   Int
+  physicalQty Int         @default(0)
+  variance    Int         @default(0)
+  reason      String?
+  notes       String?
+
+  @@index([opnameId])
+  @@map("stock_opname_items")
+}
+
+// =============================================
+// AUDIT LOG
+// =============================================
+
+model AuditLog {
+  id          String      @id @default(cuid())
+  userId      String?
+  user        User?       @relation(fields: [userId], references: [id])
+  action      AuditAction
+  entity      String
+  entityId    String?
+  entityNo    String?
+  before      Json?
+  after       Json?
+  description String?
+  ipAddress   String?
+  userAgent   String?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([entity])
+  @@index([entityId])
+  @@index([action])
+  @@map("audit_logs")
+}
+
+// =============================================
+// ACTIVITY TIMELINE (generic)
+// =============================================
+
+model ActivityTimeline {
+  id            String @id @default(cuid())
+  entityType    String
+  entityId      String
+  action        String
+  description   String?
+  notes         String?
+  userId        String?
+  user          User?  @relation(fields: [userId], references: [id])
+  userName      String?
+  metadata      Json?
+
+  createdAt DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@map("activity_timelines")
+}
+
+// =============================================
+// NOTIFICATIONS
+// =============================================
+
+model Notification {
+  id         String           @id @default(cuid())
+  userId     String
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sellerId   String?
+  seller     Seller?          @relation(fields: [sellerId], references: [id])
+  type       NotificationType
+  title      String
+  message    String
+  link       String?
+  isRead     Boolean          @default(false)
+  readAt     DateTime?
+  metadata   Json?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([isRead])
+  @@map("notifications")
+}
+
+// =============================================
+// HELP CENTER
+// =============================================
+
+model HelpCategory {
+  id       String        @id @default(cuid())
+  slug     String        @unique
+  nameEn   String
+  nameId   String
+  icon     String?
+  order    Int           @default(0)
+  articles HelpArticle[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("help_categories")
+}
+
+model HelpArticle {
+  id          String       @id @default(cuid())
+  categoryId  String
+  category    HelpCategory @relation(fields: [categoryId], references: [id])
+  slug        String       @unique
+  titleEn     String
+  titleId     String
+  contentEn   String       @db.Text
+  contentId   String       @db.Text
+  page        String?
+  tags        String[]
+  isPublished Boolean      @default(true)
+  order       Int          @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([categoryId])
+  @@index([page])
+  @@map("help_articles")
+}
+
+// =============================================
+// FILE UPLOADS
+// =============================================
+
+model FileUpload {
+  id           String   @id @default(cuid())
+  filename     String
+  originalName String
+  mimetype     String
+  size         Int
+  path         String
+  url          String
+  fileType     FileType @default(OTHER)
+  entityType   String?
+  entityId     String?
+  uploadedBy   String?
+
+  inbounds     Inbound[]  @relation("InboundFiles")
+  outbounds    Outbound[] @relation("OutboundFiles")
+  returns      Return[]   @relation("ReturnFiles")
+  manifests    Manifest[] @relation("ManifestFiles")
+
+  createdAt DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@map("file_uploads")
+}
+
+// =============================================
+// WAREHOUSE CONFIG
+// =============================================
+
+model WarehouseConfig {
+  id        String  @id @default(cuid())
+  key       String  @unique
+  value     String
+  label     String?
+  group     String?
+
+  updatedAt DateTime @updatedAt
+
+  @@map("warehouse_configs")
+}

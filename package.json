@@ -21,7 +21,7 @@
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:generate": "npx prisma generate",
     "prisma:studio": "npx prisma studio",
-    "prisma:seed": "tsc prisma/seed.ts --outDir prisma-build --module commonjs --target es2020 --esModuleInterop && node prisma-build/seed.js",
+    "prisma:seed": "npx tsx prisma/seed.ts",
     "prisma:reset": "npx prisma migrate reset --force && npm run prisma:seed",
     "postinstall": "prisma generate"
   },
@@ -50,6 +50,7 @@
     "pdfkit": "^0.14.0",
     "reflect-metadata": "^0.1.14",
     "rxjs": "^7.8.1",
+    "tsx": "^4.22.4",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

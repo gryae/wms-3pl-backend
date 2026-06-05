@@ -8,6 +8,7 @@ import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import * as express from 'express';
 import { join } from 'path';
+import { Request, Response } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -17,35 +18,45 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   // const port = configService.get<number>('PORT', 3001);
   const port = process.env.PORT || 3001;
-  const frontendUrl = configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
+  //const frontendUrl = configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
 
   // Static Assets routing for file uploads
   app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));
 
   app.enableCors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (e.g., mobile apps, Postman)
-      if (!origin) return callback(null, true);
-      // Allow any vercel.app subdomain for preview deployments
-      if (origin.endsWith('.vercel.app')) return callback(null, true);
-      // Allow configured origins
-      if (allowedOrigins.includes(origin)) return callback(null, true);
-      callback(new Error(`CORS policy: origin ${origin} not allowed`));
-    },
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'x-refresh-token'],
+    origin: true,
     credentials: true,
+    methods: [
+      'GET',
+      'POST',
+      'PUT',
+      'PATCH',
+      'DELETE',
+      'OPTIONS',
+    ],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'x-refresh-token',
+    ],
+  });
+
+  app.use((req: Request, res: Response, next) => {
+    if (req.method === 'OPTIONS') {
+      return res.sendStatus(204);
+    }
+    next();
   });
 
   // Security
   app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 
   // CORS
-  const allowedOrigins = [
-    frontendUrl,
-    'http://localhost:3000',
-    'http://localhost:3001',
-  ];
+  // const allowedOrigins = [
+  //   frontendUrl,
+  //   'http://localhost:3000',
+  //   'http://localhost:3001',
+  // ];
 
 
 

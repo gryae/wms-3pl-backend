@@ -22,7 +22,8 @@
     "prisma:generate": "npx prisma generate",
     "prisma:studio": "npx prisma studio",
     "prisma:seed": "npx ts-node prisma/seed.ts",
-    "prisma:reset": "npx prisma migrate reset --force && npm run prisma:seed"
+    "prisma:reset": "npx prisma migrate reset --force && npm run prisma:seed",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@nestjs/common": "^10.3.0",
@@ -85,11 +86,19 @@
     "seed": "ts-node prisma/seed.ts"
   },
   "jest": {
-    "moduleFileExtensions": ["js", "json", "ts"],
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
-    "transform": { "^.+\\.(t|j)s$": "ts-jest" },
-    "collectCoverageFrom": ["**/*.(t|j)s"],
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   }

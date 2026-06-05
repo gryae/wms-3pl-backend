@@ -23,7 +23,9 @@
     "prisma:studio": "npx prisma studio",
     "prisma:seed": "npx ts-node prisma/seed.ts",
     "prisma:reset": "npx prisma migrate reset --force && npm run prisma:seed",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "railway:build": "npm run build",
+    "prestart:prod": "npm run build"
   },
   "dependencies": {
     "@nestjs/common": "^10.3.0",

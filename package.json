@@ -21,7 +21,7 @@
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:generate": "npx prisma generate",
     "prisma:studio": "npx prisma studio",
-    "prisma:seed": "node --loader ts-node/esm prisma/seed.ts",
+    "prisma:seed": "tsc prisma/seed.ts --outDir prisma-build --module commonjs --target es2020 --esModuleInterop && node prisma-build/seed.js",
     "prisma:reset": "npx prisma migrate reset --force && npm run prisma:seed",
     "postinstall": "prisma generate"
   },
@@ -80,7 +80,7 @@
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.9.3"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"

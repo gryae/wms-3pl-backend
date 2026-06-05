@@ -5,7 +5,7 @@
     "buildCommand": "npm run build"
   },
   "deploy": {
-    "preDeployCommand": "npx prisma migrate deploy",
+    "preDeployCommand": "until npx prisma migrate deploy; do echo 'DB not ready yet, retrying in 5s...'; sleep 5; done",
     "startCommand": "npm run start:prod"
   }
 }

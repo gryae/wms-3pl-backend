@@ -22,17 +22,6 @@ async function bootstrap() {
   // Static Assets routing for file uploads
   app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));
 
-
-  // Security
-  app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
-
-  // CORS
-  const allowedOrigins = [
-    frontendUrl,
-    'http://localhost:3000',
-    'http://localhost:3001',
-  ];
-
   app.enableCors({
     origin: (origin, callback) => {
       // Allow requests with no origin (e.g., mobile apps, Postman)
@@ -47,6 +36,18 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization', 'x-refresh-token'],
     credentials: true,
   });
+
+  // Security
+  app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
+
+  // CORS
+  const allowedOrigins = [
+    frontendUrl,
+    'http://localhost:3000',
+    'http://localhost:3001',
+  ];
+
+
 
   // Global prefix
   app.setGlobalPrefix('api');

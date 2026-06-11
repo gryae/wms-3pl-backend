@@ -6,9 +6,9 @@ export declare class SettingsController {
     findAll(sellerId?: string): Promise<{
         id: string;
         updatedAt: Date;
-        label: string | null;
         key: string;
         value: string;
+        label: string | null;
         group: string | null;
     }[]>;
     update(dto: UpdateSettingsDto, currentUserId: string, sellerId?: string): Promise<any[]>;

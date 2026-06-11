@@ -12,14 +12,17 @@ export declare class OutboundService {
     constructor(prisma: PrismaService, inventoryService: InventoryService, auditLogService: AuditLogService, notificationHelper: NotificationHelperService);
     create(dto: CreateOutboundDto, currentUserId: string): Promise<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        deletedAt: Date | null;
         status: import(".prisma/client").$Enums.OutboundStatus;
         sellerId: string;
+        deletedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         type: import(".prisma/client").$Enums.OutboundType;
-        completedAt: Date | null;
         notes: string | null;
+        completedAt: Date | null;
+        cancelledAt: Date | null;
+        cancelReason: string | null;
+        createdById: string;
         outboundNo: string;
         recipientName: string;
         recipientPhone: string;
@@ -27,27 +30,28 @@ export declare class OutboundService {
         recipientCity: string | null;
         recipientProvince: string | null;
         recipientPostcode: string | null;
-        courierId: string | null;
         trackingNumber: string | null;
+        sellerAwbNo: string | null;
         shippingCost: import("@prisma/client/runtime/library").Decimal | null;
         codAmount: import("@prisma/client/runtime/library").Decimal | null;
         pickedAt: Date | null;
         packedAt: Date | null;
         shippedAt: Date | null;
-        cancelledAt: Date | null;
-        cancelReason: string | null;
-        createdById: string;
+        courierId: string | null;
     }>;
     submit(id: string, currentUserId: string): Promise<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        deletedAt: Date | null;
         status: import(".prisma/client").$Enums.OutboundStatus;
         sellerId: string;
+        deletedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         type: import(".prisma/client").$Enums.OutboundType;
-        completedAt: Date | null;
         notes: string | null;
+        completedAt: Date | null;
+        cancelledAt: Date | null;
+        cancelReason: string | null;
+        createdById: string;
         outboundNo: string;
         recipientName: string;
         recipientPhone: string;
@@ -55,27 +59,28 @@ export declare class OutboundService {
         recipientCity: string | null;
         recipientProvince: string | null;
         recipientPostcode: string | null;
-        courierId: string | null;
         trackingNumber: string | null;
+        sellerAwbNo: string | null;
         shippingCost: import("@prisma/client/runtime/library").Decimal | null;
         codAmount: import("@prisma/client/runtime/library").Decimal | null;
         pickedAt: Date | null;
         packedAt: Date | null;
         shippedAt: Date | null;
-        cancelledAt: Date | null;
-        cancelReason: string | null;
-        createdById: string;
+        courierId: string | null;
     }>;
     ship(id: string, trackingNumber: string, currentUserId: string): Promise<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        deletedAt: Date | null;
         status: import(".prisma/client").$Enums.OutboundStatus;
         sellerId: string;
+        deletedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         type: import(".prisma/client").$Enums.OutboundType;
-        completedAt: Date | null;
         notes: string | null;
+        completedAt: Date | null;
+        cancelledAt: Date | null;
+        cancelReason: string | null;
+        createdById: string;
         outboundNo: string;
         recipientName: string;
         recipientPhone: string;
@@ -83,27 +88,28 @@ export declare class OutboundService {
         recipientCity: string | null;
         recipientProvince: string | null;
         recipientPostcode: string | null;
-        courierId: string | null;
         trackingNumber: string | null;
+        sellerAwbNo: string | null;
         shippingCost: import("@prisma/client/runtime/library").Decimal | null;
         codAmount: import("@prisma/client/runtime/library").Decimal | null;
         pickedAt: Date | null;
         packedAt: Date | null;
         shippedAt: Date | null;
-        cancelledAt: Date | null;
-        cancelReason: string | null;
-        createdById: string;
+        courierId: string | null;
     }>;
     complete(id: string, currentUserId: string): Promise<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        deletedAt: Date | null;
         status: import(".prisma/client").$Enums.OutboundStatus;
         sellerId: string;
+        deletedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         type: import(".prisma/client").$Enums.OutboundType;
-        completedAt: Date | null;
         notes: string | null;
+        completedAt: Date | null;
+        cancelledAt: Date | null;
+        cancelReason: string | null;
+        createdById: string;
         outboundNo: string;
         recipientName: string;
         recipientPhone: string;
@@ -111,27 +117,28 @@ export declare class OutboundService {
         recipientCity: string | null;
         recipientProvince: string | null;
         recipientPostcode: string | null;
-        courierId: string | null;
         trackingNumber: string | null;
+        sellerAwbNo: string | null;
         shippingCost: import("@prisma/client/runtime/library").Decimal | null;
         codAmount: import("@prisma/client/runtime/library").Decimal | null;
         pickedAt: Date | null;
         packedAt: Date | null;
         shippedAt: Date | null;
-        cancelledAt: Date | null;
-        cancelReason: string | null;
-        createdById: string;
+        courierId: string | null;
     }>;
     cancel(id: string, reason: string, currentUserId: string): Promise<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        deletedAt: Date | null;
         status: import(".prisma/client").$Enums.OutboundStatus;
         sellerId: string;
+        deletedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         type: import(".prisma/client").$Enums.OutboundType;
-        completedAt: Date | null;
         notes: string | null;
+        completedAt: Date | null;
+        cancelledAt: Date | null;
+        cancelReason: string | null;
+        createdById: string;
         outboundNo: string;
         recipientName: string;
         recipientPhone: string;
@@ -139,40 +146,41 @@ export declare class OutboundService {
         recipientCity: string | null;
         recipientProvince: string | null;
         recipientPostcode: string | null;
-        courierId: string | null;
         trackingNumber: string | null;
+        sellerAwbNo: string | null;
         shippingCost: import("@prisma/client/runtime/library").Decimal | null;
         codAmount: import("@prisma/client/runtime/library").Decimal | null;
         pickedAt: Date | null;
         packedAt: Date | null;
         shippedAt: Date | null;
-        cancelledAt: Date | null;
-        cancelReason: string | null;
-        createdById: string;
+        courierId: string | null;
     }>;
     findAll(paginationDto: PaginationDto, sellerId?: string): Promise<import("../../common/dto/pagination.dto").PaginatedResult<{
-        courier: {
-            code: string;
-            name: string;
-        };
         seller: {
-            code: string;
             name: string;
+            code: string;
+        };
+        courier: {
+            name: string;
+            code: string;
         };
         createdBy: {
-            name: string;
             email: string;
+            name: string;
         };
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        deletedAt: Date | null;
         status: import(".prisma/client").$Enums.OutboundStatus;
         sellerId: string;
+        deletedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         type: import(".prisma/client").$Enums.OutboundType;
-        completedAt: Date | null;
         notes: string | null;
+        completedAt: Date | null;
+        cancelledAt: Date | null;
+        cancelReason: string | null;
+        createdById: string;
         outboundNo: string;
         recipientName: string;
         recipientPhone: string;
@@ -180,52 +188,86 @@ export declare class OutboundService {
         recipientCity: string | null;
         recipientProvince: string | null;
         recipientPostcode: string | null;
-        courierId: string | null;
         trackingNumber: string | null;
+        sellerAwbNo: string | null;
         shippingCost: import("@prisma/client/runtime/library").Decimal | null;
         codAmount: import("@prisma/client/runtime/library").Decimal | null;
         pickedAt: Date | null;
         packedAt: Date | null;
         shippedAt: Date | null;
-        cancelledAt: Date | null;
-        cancelReason: string | null;
-        createdById: string;
+        courierId: string | null;
     }>>;
     findOne(id: string, sellerId?: string): Promise<{
-        courier: {
-            id: string;
-            code: string;
-            name: string;
-            createdAt: Date;
-            updatedAt: Date;
-            logo: string | null;
-            isActive: boolean;
-            deletedAt: Date | null;
-        };
         seller: {
             id: string;
-            code: string;
-            name: string;
-            createdAt: Date;
-            updatedAt: Date;
-            deletedAt: Date | null;
             email: string | null;
+            name: string;
             phone: string | null;
             status: import(".prisma/client").$Enums.SellerStatus;
+            deletedAt: Date | null;
+            createdAt: Date;
+            updatedAt: Date;
+            code: string;
             address: string | null;
             logoUrl: string | null;
+        };
+        courier: {
+            id: string;
+            name: string;
+            deletedAt: Date | null;
+            createdAt: Date;
+            updatedAt: Date;
+            code: string;
+            logo: string | null;
+            isActive: boolean;
+        };
+        pickTask: {
+            assignee: {
+                name: string;
+            };
+        } & {
+            id: string;
+            status: import(".prisma/client").$Enums.PickTaskStatus;
+            createdAt: Date;
+            updatedAt: Date;
+            notes: string | null;
+            completedAt: Date | null;
+            outboundId: string;
+            assigneeId: string | null;
+            startedAt: Date | null;
+        };
+        packTask: {
+            assignee: {
+                name: string;
+            };
+        } & {
+            id: string;
+            status: import(".prisma/client").$Enums.PackTaskStatus;
+            createdAt: Date;
+            updatedAt: Date;
+            notes: string | null;
+            completedAt: Date | null;
+            weight: import("@prisma/client/runtime/library").Decimal | null;
+            outboundId: string;
+            assigneeId: string | null;
+            startedAt: Date | null;
+            boxCount: number | null;
+        };
+        createdBy: {
+            email: string;
+            name: string;
         };
         items: ({
             product: {
                 id: string;
                 name: string;
-                description: string | null;
+                status: import(".prisma/client").$Enums.ProductStatus;
+                sellerId: string;
+                deletedAt: Date | null;
                 createdAt: Date;
                 updatedAt: Date;
                 length: import("@prisma/client/runtime/library").Decimal | null;
-                deletedAt: Date | null;
-                status: import(".prisma/client").$Enums.ProductStatus;
-                sellerId: string;
+                description: string | null;
                 sku: string;
                 barcode: string | null;
                 hpp: import("@prisma/client/runtime/library").Decimal;
@@ -237,68 +279,35 @@ export declare class OutboundService {
             };
         } & {
             id: string;
-            productId: string;
-            outboundId: string;
             notes: string | null;
+            productId: string;
             quantity: number;
+            outboundId: string;
             pickedQty: number;
             packedQty: number;
         })[];
-        pickTask: {
-            assignee: {
-                name: string;
-            };
-        } & {
-            id: string;
-            createdAt: Date;
-            updatedAt: Date;
-            status: import(".prisma/client").$Enums.PickTaskStatus;
-            outboundId: string;
-            assigneeId: string | null;
-            startedAt: Date | null;
-            completedAt: Date | null;
-            notes: string | null;
-        };
-        createdBy: {
-            name: string;
-            email: string;
-        };
         timelines: {
             id: string;
             createdAt: Date;
             userId: string | null;
-            outboundId: string;
             notes: string | null;
             action: string;
             userName: string | null;
-        }[];
-        packTask: {
-            assignee: {
-                name: string;
-            };
-        } & {
-            id: string;
-            createdAt: Date;
-            updatedAt: Date;
-            status: import(".prisma/client").$Enums.PackTaskStatus;
-            weight: import("@prisma/client/runtime/library").Decimal | null;
             outboundId: string;
-            assigneeId: string | null;
-            startedAt: Date | null;
-            completedAt: Date | null;
-            notes: string | null;
-            boxCount: number | null;
-        };
+        }[];
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        deletedAt: Date | null;
         status: import(".prisma/client").$Enums.OutboundStatus;
         sellerId: string;
+        deletedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         type: import(".prisma/client").$Enums.OutboundType;
-        completedAt: Date | null;
         notes: string | null;
+        completedAt: Date | null;
+        cancelledAt: Date | null;
+        cancelReason: string | null;
+        createdById: string;
         outboundNo: string;
         recipientName: string;
         recipientPhone: string;
@@ -306,15 +315,13 @@ export declare class OutboundService {
         recipientCity: string | null;
         recipientProvince: string | null;
         recipientPostcode: string | null;
-        courierId: string | null;
         trackingNumber: string | null;
+        sellerAwbNo: string | null;
         shippingCost: import("@prisma/client/runtime/library").Decimal | null;
         codAmount: import("@prisma/client/runtime/library").Decimal | null;
         pickedAt: Date | null;
         packedAt: Date | null;
         shippedAt: Date | null;
-        cancelledAt: Date | null;
-        cancelReason: string | null;
-        createdById: string;
+        courierId: string | null;
     }>;
 }

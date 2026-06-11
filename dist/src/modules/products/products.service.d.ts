@@ -10,13 +10,13 @@ export declare class ProductsService {
     create(createProductDto: CreateProductDto, currentUserId?: string): Promise<{
         id: string;
         name: string;
-        description: string | null;
+        status: import(".prisma/client").$Enums.ProductStatus;
+        sellerId: string;
+        deletedAt: Date | null;
         createdAt: Date;
         updatedAt: Date;
         length: import("@prisma/client/runtime/library").Decimal | null;
-        deletedAt: Date | null;
-        status: import(".prisma/client").$Enums.ProductStatus;
-        sellerId: string;
+        description: string | null;
         sku: string;
         barcode: string | null;
         hpp: import("@prisma/client/runtime/library").Decimal;
@@ -29,8 +29,8 @@ export declare class ProductsService {
     findAll(paginationDto: PaginationDto, sellerId?: string): Promise<import("../../common/dto/pagination.dto").PaginatedResult<{
         seller: {
             id: string;
-            code: string;
             name: string;
+            code: string;
         };
         inventoryBalances: {
             available: number;
@@ -41,13 +41,13 @@ export declare class ProductsService {
     } & {
         id: string;
         name: string;
-        description: string | null;
+        status: import(".prisma/client").$Enums.ProductStatus;
+        sellerId: string;
+        deletedAt: Date | null;
         createdAt: Date;
         updatedAt: Date;
         length: import("@prisma/client/runtime/library").Decimal | null;
-        deletedAt: Date | null;
-        status: import(".prisma/client").$Enums.ProductStatus;
-        sellerId: string;
+        description: string | null;
         sku: string;
         barcode: string | null;
         hpp: import("@prisma/client/runtime/library").Decimal;
@@ -60,21 +60,21 @@ export declare class ProductsService {
     findOne(id: string, sellerId?: string): Promise<{
         seller: {
             id: string;
-            code: string;
-            name: string;
-            createdAt: Date;
-            updatedAt: Date;
-            deletedAt: Date | null;
             email: string | null;
+            name: string;
             phone: string | null;
             status: import(".prisma/client").$Enums.SellerStatus;
+            deletedAt: Date | null;
+            createdAt: Date;
+            updatedAt: Date;
+            code: string;
             address: string | null;
             logoUrl: string | null;
         };
         inventoryBalances: {
             id: string;
-            updatedAt: Date;
             sellerId: string;
+            updatedAt: Date;
             productId: string;
             available: number;
             reserved: number;
@@ -84,13 +84,13 @@ export declare class ProductsService {
     } & {
         id: string;
         name: string;
-        description: string | null;
+        status: import(".prisma/client").$Enums.ProductStatus;
+        sellerId: string;
+        deletedAt: Date | null;
         createdAt: Date;
         updatedAt: Date;
         length: import("@prisma/client/runtime/library").Decimal | null;
-        deletedAt: Date | null;
-        status: import(".prisma/client").$Enums.ProductStatus;
-        sellerId: string;
+        description: string | null;
         sku: string;
         barcode: string | null;
         hpp: import("@prisma/client/runtime/library").Decimal;
@@ -103,13 +103,13 @@ export declare class ProductsService {
     update(id: string, updateProductDto: UpdateProductDto, currentUserId?: string, sellerId?: string): Promise<{
         id: string;
         name: string;
-        description: string | null;
+        status: import(".prisma/client").$Enums.ProductStatus;
+        sellerId: string;
+        deletedAt: Date | null;
         createdAt: Date;
         updatedAt: Date;
         length: import("@prisma/client/runtime/library").Decimal | null;
-        deletedAt: Date | null;
-        status: import(".prisma/client").$Enums.ProductStatus;
-        sellerId: string;
+        description: string | null;
         sku: string;
         barcode: string | null;
         hpp: import("@prisma/client/runtime/library").Decimal;

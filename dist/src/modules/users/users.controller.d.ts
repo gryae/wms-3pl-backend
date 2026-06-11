@@ -8,49 +8,49 @@ export declare class UsersController {
     constructor(usersService: UsersService);
     create(createUserDto: CreateUserDto, currentUserId: string): Promise<{
         id: string;
-        name: string;
-        createdAt: Date;
-        updatedAt: Date;
-        role: import(".prisma/client").$Enums.UserRole;
-        deletedAt: Date | null;
         email: string;
         password: string;
+        name: string;
         phone: string | null;
+        role: import(".prisma/client").$Enums.UserRole;
         status: import(".prisma/client").$Enums.UserStatus;
         sellerId: string | null;
         avatarUrl: string | null;
         lastLoginAt: Date | null;
+        deletedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     findAll(paginationDto: PaginationDto, sellerId?: string): Promise<import("../../common/dto/pagination.dto").PaginatedResult<{
         seller: {
             id: string;
-            code: string;
             name: string;
+            code: string;
         };
         id: string;
-        name: string;
-        createdAt: Date;
-        updatedAt: Date;
-        role: import(".prisma/client").$Enums.UserRole;
-        deletedAt: Date | null;
         email: string;
+        name: string;
         phone: string | null;
+        role: import(".prisma/client").$Enums.UserRole;
         status: import(".prisma/client").$Enums.UserStatus;
         sellerId: string | null;
         avatarUrl: string | null;
         lastLoginAt: Date | null;
+        deletedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
     }>>;
     getProfile(userId: string): Promise<{
         seller: {
             id: string;
-            code: string;
-            name: string;
-            createdAt: Date;
-            updatedAt: Date;
-            deletedAt: Date | null;
             email: string | null;
+            name: string;
             phone: string | null;
             status: import(".prisma/client").$Enums.SellerStatus;
+            deletedAt: Date | null;
+            createdAt: Date;
+            updatedAt: Date;
+            code: string;
             address: string | null;
             logoUrl: string | null;
         };
@@ -65,18 +65,18 @@ export declare class UsersController {
         };
     } & {
         id: string;
-        name: string;
-        createdAt: Date;
-        updatedAt: Date;
-        role: import(".prisma/client").$Enums.UserRole;
-        deletedAt: Date | null;
         email: string;
         password: string;
+        name: string;
         phone: string | null;
+        role: import(".prisma/client").$Enums.UserRole;
         status: import(".prisma/client").$Enums.UserStatus;
         sellerId: string | null;
         avatarUrl: string | null;
         lastLoginAt: Date | null;
+        deletedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     getPreferences(userId: string): Promise<{
         id: string;
@@ -99,14 +99,14 @@ export declare class UsersController {
     findOne(id: string): Promise<{
         seller: {
             id: string;
-            code: string;
-            name: string;
-            createdAt: Date;
-            updatedAt: Date;
-            deletedAt: Date | null;
             email: string | null;
+            name: string;
             phone: string | null;
             status: import(".prisma/client").$Enums.SellerStatus;
+            deletedAt: Date | null;
+            createdAt: Date;
+            updatedAt: Date;
+            code: string;
             address: string | null;
             logoUrl: string | null;
         };
@@ -121,33 +121,33 @@ export declare class UsersController {
         };
     } & {
         id: string;
-        name: string;
-        createdAt: Date;
-        updatedAt: Date;
-        role: import(".prisma/client").$Enums.UserRole;
-        deletedAt: Date | null;
         email: string;
         password: string;
+        name: string;
         phone: string | null;
+        role: import(".prisma/client").$Enums.UserRole;
         status: import(".prisma/client").$Enums.UserStatus;
         sellerId: string | null;
         avatarUrl: string | null;
         lastLoginAt: Date | null;
+        deletedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     update(id: string, updateUserDto: UpdateUserDto, currentUserId: string): Promise<{
         id: string;
-        name: string;
-        createdAt: Date;
-        updatedAt: Date;
-        role: import(".prisma/client").$Enums.UserRole;
-        deletedAt: Date | null;
         email: string;
         password: string;
+        name: string;
         phone: string | null;
+        role: import(".prisma/client").$Enums.UserRole;
         status: import(".prisma/client").$Enums.UserStatus;
         sellerId: string | null;
         avatarUrl: string | null;
         lastLoginAt: Date | null;
+        deletedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     remove(id: string, currentUserId: string): Promise<{
         message: string;

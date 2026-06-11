@@ -51,8 +51,8 @@ __decorate([
     __metadata("design:type", String)
 ], CreateReturnDto.prototype, "outboundId", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'Wrong product size shipped' }),
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, swagger_1.ApiPropertyOptional)({ example: 'Wrong product size shipped' }),
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateReturnDto.prototype, "reason", void 0);

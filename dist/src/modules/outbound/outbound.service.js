@@ -25,7 +25,7 @@ let OutboundService = class OutboundService {
         this.notificationHelper = notificationHelper;
     }
     async create(dto, currentUserId) {
-        const { sellerId, type, recipientName, recipientPhone, recipientAddress, recipientCity, recipientProvince, recipientPostcode, courierId, shippingCost, codAmount, notes, items } = dto;
+        const { sellerId, type, recipientName, recipientPhone, recipientAddress, recipientCity, recipientProvince, recipientPostcode, courierId, shippingCost, codAmount, notes, sellerAwbNo, items } = dto;
         if (items.length === 0) {
             throw new common_1.BadRequestException('Outbound order must contain at least one item');
         }
@@ -59,6 +59,7 @@ let OutboundService = class OutboundService {
                     shippingCost,
                     codAmount,
                     notes,
+                    sellerAwbNo,
                     status: client_1.OutboundStatus.DRAFT,
                     createdById: currentUserId,
                 },

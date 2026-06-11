@@ -17,5 +17,6 @@ export declare class CreateOutboundDto {
     shippingCost?: number;
     codAmount?: number;
     notes?: string;
+    sellerAwbNo?: string;
     items: OutboundItemDto[];
 }

@@ -5,32 +5,32 @@ export declare class NotificationsController {
     constructor(notificationsService: NotificationsService);
     findAll(paginationDto: PaginationDto, userId: string): Promise<import("../../common/dto/pagination.dto").PaginatedResult<{
         id: string;
+        sellerId: string | null;
         createdAt: Date;
         link: string | null;
-        sellerId: string | null;
         userId: string;
         type: import(".prisma/client").$Enums.NotificationType;
         title: string;
         message: string;
+        metadata: import("@prisma/client/runtime/library").JsonValue | null;
         isRead: boolean;
         readAt: Date | null;
-        metadata: import("@prisma/client/runtime/library").JsonValue | null;
     }>>;
     getUnreadCount(userId: string): Promise<{
         count: number;
     }>;
     markAsRead(id: string, userId: string): Promise<{
         id: string;
+        sellerId: string | null;
         createdAt: Date;
         link: string | null;
-        sellerId: string | null;
         userId: string;
         type: import(".prisma/client").$Enums.NotificationType;
         title: string;
         message: string;
+        metadata: import("@prisma/client/runtime/library").JsonValue | null;
         isRead: boolean;
         readAt: Date | null;
-        metadata: import("@prisma/client/runtime/library").JsonValue | null;
     }>;
     markAllAsRead(userId: string): Promise<{
         message: string;

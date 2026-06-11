@@ -7,43 +7,43 @@ export declare class CouriersController {
     constructor(couriersService: CouriersService);
     create(createCourierDto: CreateCourierDto, currentUserId: string): Promise<{
         id: string;
-        code: string;
         name: string;
+        deletedAt: Date | null;
         createdAt: Date;
         updatedAt: Date;
+        code: string;
         logo: string | null;
         isActive: boolean;
-        deletedAt: Date | null;
     }>;
     findAll(paginationDto: PaginationDto): Promise<import("../../common/dto/pagination.dto").PaginatedResult<{
         id: string;
-        code: string;
         name: string;
+        deletedAt: Date | null;
         createdAt: Date;
         updatedAt: Date;
+        code: string;
         logo: string | null;
         isActive: boolean;
-        deletedAt: Date | null;
     }>>;
     findOne(id: string): Promise<{
         id: string;
-        code: string;
         name: string;
+        deletedAt: Date | null;
         createdAt: Date;
         updatedAt: Date;
+        code: string;
         logo: string | null;
         isActive: boolean;
-        deletedAt: Date | null;
     }>;
     update(id: string, updateCourierDto: UpdateCourierDto, currentUserId: string): Promise<{
         id: string;
-        code: string;
         name: string;
+        deletedAt: Date | null;
         createdAt: Date;
         updatedAt: Date;
+        code: string;
         logo: string | null;
         isActive: boolean;
-        deletedAt: Date | null;
     }>;
     remove(id: string, currentUserId: string): Promise<{
         message: string;

@@ -13,83 +13,90 @@ export declare class InboundService {
     constructor(prisma: PrismaService, inventoryService: InventoryService, auditLogService: AuditLogService, notificationHelper: NotificationHelperService);
     create(dto: CreateInboundDto, currentUserId: string): Promise<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        deletedAt: Date | null;
         status: import(".prisma/client").$Enums.InboundStatus;
         sellerId: string;
+        deletedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         type: import(".prisma/client").$Enums.InboundType;
-        completedAt: Date | null;
+        inboundNo: string;
+        referenceNo: string | null;
         notes: string | null;
+        receivedAt: Date | null;
+        completedAt: Date | null;
         cancelledAt: Date | null;
         cancelReason: string | null;
         createdById: string;
-        referenceNo: string | null;
-        inboundNo: string;
-        receivedAt: Date | null;
         receivedById: string | null;
     }>;
     submit(id: string, currentUserId: string): Promise<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        deletedAt: Date | null;
         status: import(".prisma/client").$Enums.InboundStatus;
         sellerId: string;
+        deletedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         type: import(".prisma/client").$Enums.InboundType;
-        completedAt: Date | null;
+        inboundNo: string;
+        referenceNo: string | null;
         notes: string | null;
+        receivedAt: Date | null;
+        completedAt: Date | null;
         cancelledAt: Date | null;
         cancelReason: string | null;
         createdById: string;
-        referenceNo: string | null;
-        inboundNo: string;
-        receivedAt: Date | null;
         receivedById: string | null;
     }>;
     startReceiving(id: string, currentUserId: string): Promise<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        deletedAt: Date | null;
         status: import(".prisma/client").$Enums.InboundStatus;
         sellerId: string;
+        deletedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         type: import(".prisma/client").$Enums.InboundType;
-        completedAt: Date | null;
+        inboundNo: string;
+        referenceNo: string | null;
         notes: string | null;
+        receivedAt: Date | null;
+        completedAt: Date | null;
         cancelledAt: Date | null;
         cancelReason: string | null;
         createdById: string;
-        referenceNo: string | null;
-        inboundNo: string;
-        receivedAt: Date | null;
         receivedById: string | null;
     }>;
     receive(id: string, dto: ReceiveInboundDto, currentUserId: string): Promise<{
         seller: {
             id: string;
-            code: string;
-            name: string;
-            createdAt: Date;
-            updatedAt: Date;
-            deletedAt: Date | null;
             email: string | null;
+            name: string;
             phone: string | null;
             status: import(".prisma/client").$Enums.SellerStatus;
+            deletedAt: Date | null;
+            createdAt: Date;
+            updatedAt: Date;
+            code: string;
             address: string | null;
             logoUrl: string | null;
+        };
+        createdBy: {
+            email: string;
+            name: string;
+        };
+        receivedBy: {
+            name: string;
         };
         items: ({
             product: {
                 id: string;
                 name: string;
-                description: string | null;
+                status: import(".prisma/client").$Enums.ProductStatus;
+                sellerId: string;
+                deletedAt: Date | null;
                 createdAt: Date;
                 updatedAt: Date;
                 length: import("@prisma/client/runtime/library").Decimal | null;
-                deletedAt: Date | null;
-                status: import(".prisma/client").$Enums.ProductStatus;
-                sellerId: string;
+                description: string | null;
                 sku: string;
                 barcode: string | null;
                 hpp: import("@prisma/client/runtime/library").Decimal;
@@ -101,138 +108,138 @@ export declare class InboundService {
             };
         } & {
             id: string;
-            productId: string;
             notes: string | null;
             inboundId: string;
+            productId: string;
             expectedQty: number;
             receivedQty: number;
             rejectQty: number;
         })[];
-        createdBy: {
-            name: string;
-            email: string;
-        };
         timelines: {
             id: string;
             createdAt: Date;
             userId: string | null;
             notes: string | null;
+            inboundId: string;
             action: string;
             userName: string | null;
-            inboundId: string;
         }[];
-        receivedBy: {
-            name: string;
-        };
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        deletedAt: Date | null;
         status: import(".prisma/client").$Enums.InboundStatus;
         sellerId: string;
+        deletedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         type: import(".prisma/client").$Enums.InboundType;
-        completedAt: Date | null;
+        inboundNo: string;
+        referenceNo: string | null;
         notes: string | null;
+        receivedAt: Date | null;
+        completedAt: Date | null;
         cancelledAt: Date | null;
         cancelReason: string | null;
         createdById: string;
-        referenceNo: string | null;
-        inboundNo: string;
-        receivedAt: Date | null;
         receivedById: string | null;
     }>;
     complete(id: string, currentUserId: string): Promise<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        deletedAt: Date | null;
         status: import(".prisma/client").$Enums.InboundStatus;
         sellerId: string;
+        deletedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         type: import(".prisma/client").$Enums.InboundType;
-        completedAt: Date | null;
+        inboundNo: string;
+        referenceNo: string | null;
         notes: string | null;
+        receivedAt: Date | null;
+        completedAt: Date | null;
         cancelledAt: Date | null;
         cancelReason: string | null;
         createdById: string;
-        referenceNo: string | null;
-        inboundNo: string;
-        receivedAt: Date | null;
         receivedById: string | null;
     }>;
     cancel(id: string, reason: string, currentUserId: string): Promise<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        deletedAt: Date | null;
         status: import(".prisma/client").$Enums.InboundStatus;
         sellerId: string;
+        deletedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         type: import(".prisma/client").$Enums.InboundType;
-        completedAt: Date | null;
+        inboundNo: string;
+        referenceNo: string | null;
         notes: string | null;
+        receivedAt: Date | null;
+        completedAt: Date | null;
         cancelledAt: Date | null;
         cancelReason: string | null;
         createdById: string;
-        referenceNo: string | null;
-        inboundNo: string;
-        receivedAt: Date | null;
         receivedById: string | null;
     }>;
     findAll(paginationDto: PaginationDto, sellerId?: string): Promise<import("../../common/dto/pagination.dto").PaginatedResult<{
         seller: {
-            code: string;
             name: string;
+            code: string;
         };
         createdBy: {
-            name: string;
             email: string;
+            name: string;
         };
         receivedBy: {
             name: string;
         };
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        deletedAt: Date | null;
         status: import(".prisma/client").$Enums.InboundStatus;
         sellerId: string;
+        deletedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         type: import(".prisma/client").$Enums.InboundType;
-        completedAt: Date | null;
+        inboundNo: string;
+        referenceNo: string | null;
         notes: string | null;
+        receivedAt: Date | null;
+        completedAt: Date | null;
         cancelledAt: Date | null;
         cancelReason: string | null;
         createdById: string;
-        referenceNo: string | null;
-        inboundNo: string;
-        receivedAt: Date | null;
         receivedById: string | null;
     }>>;
     findOne(id: string, sellerId?: string): Promise<{
         seller: {
             id: string;
-            code: string;
-            name: string;
-            createdAt: Date;
-            updatedAt: Date;
-            deletedAt: Date | null;
             email: string | null;
+            name: string;
             phone: string | null;
             status: import(".prisma/client").$Enums.SellerStatus;
+            deletedAt: Date | null;
+            createdAt: Date;
+            updatedAt: Date;
+            code: string;
             address: string | null;
             logoUrl: string | null;
+        };
+        createdBy: {
+            email: string;
+            name: string;
+        };
+        receivedBy: {
+            name: string;
         };
         items: ({
             product: {
                 id: string;
                 name: string;
-                description: string | null;
+                status: import(".prisma/client").$Enums.ProductStatus;
+                sellerId: string;
+                deletedAt: Date | null;
                 createdAt: Date;
                 updatedAt: Date;
                 length: import("@prisma/client/runtime/library").Decimal | null;
-                deletedAt: Date | null;
-                status: import(".prisma/client").$Enums.ProductStatus;
-                sellerId: string;
+                description: string | null;
                 sku: string;
                 barcode: string | null;
                 hpp: import("@prisma/client/runtime/library").Decimal;
@@ -244,45 +251,38 @@ export declare class InboundService {
             };
         } & {
             id: string;
-            productId: string;
             notes: string | null;
             inboundId: string;
+            productId: string;
             expectedQty: number;
             receivedQty: number;
             rejectQty: number;
         })[];
-        createdBy: {
-            name: string;
-            email: string;
-        };
         timelines: {
             id: string;
             createdAt: Date;
             userId: string | null;
             notes: string | null;
+            inboundId: string;
             action: string;
             userName: string | null;
-            inboundId: string;
         }[];
-        receivedBy: {
-            name: string;
-        };
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        deletedAt: Date | null;
         status: import(".prisma/client").$Enums.InboundStatus;
         sellerId: string;
+        deletedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         type: import(".prisma/client").$Enums.InboundType;
-        completedAt: Date | null;
+        inboundNo: string;
+        referenceNo: string | null;
         notes: string | null;
+        receivedAt: Date | null;
+        completedAt: Date | null;
         cancelledAt: Date | null;
         cancelReason: string | null;
         createdById: string;
-        referenceNo: string | null;
-        inboundNo: string;
-        receivedAt: Date | null;
         receivedById: string | null;
     }>;
 }

@@ -6,19 +6,19 @@ export declare class InventoryController {
     constructor(inventoryService: InventoryService);
     getBalances(paginationDto: PaginationDto, sellerId?: string): Promise<import("../../common/dto/pagination.dto").PaginatedResult<{
         seller: {
-            code: string;
             name: string;
+            code: string;
         };
         product: {
             id: string;
             name: string;
-            description: string | null;
+            status: import(".prisma/client").$Enums.ProductStatus;
+            sellerId: string;
+            deletedAt: Date | null;
             createdAt: Date;
             updatedAt: Date;
             length: import("@prisma/client/runtime/library").Decimal | null;
-            deletedAt: Date | null;
-            status: import(".prisma/client").$Enums.ProductStatus;
-            sellerId: string;
+            description: string | null;
             sku: string;
             barcode: string | null;
             hpp: import("@prisma/client/runtime/library").Decimal;
@@ -30,8 +30,8 @@ export declare class InventoryController {
         };
     } & {
         id: string;
-        updatedAt: Date;
         sellerId: string;
+        updatedAt: Date;
         productId: string;
         available: number;
         reserved: number;
@@ -40,19 +40,19 @@ export declare class InventoryController {
     }>>;
     getMovements(paginationDto: PaginationDto, sellerId?: string): Promise<import("../../common/dto/pagination.dto").PaginatedResult<{
         seller: {
-            code: string;
             name: string;
+            code: string;
         };
         product: {
             id: string;
             name: string;
-            description: string | null;
+            status: import(".prisma/client").$Enums.ProductStatus;
+            sellerId: string;
+            deletedAt: Date | null;
             createdAt: Date;
             updatedAt: Date;
             length: import("@prisma/client/runtime/library").Decimal | null;
-            deletedAt: Date | null;
-            status: import(".prisma/client").$Enums.ProductStatus;
-            sellerId: string;
+            description: string | null;
             sku: string;
             barcode: string | null;
             hpp: import("@prisma/client/runtime/library").Decimal;
@@ -64,29 +64,29 @@ export declare class InventoryController {
         };
     } & {
         id: string;
-        createdAt: Date;
         sellerId: string;
-        productId: string;
+        createdAt: Date;
+        referenceNo: string | null;
         notes: string | null;
         createdBy: string | null;
-        quantity: number;
+        productId: string;
         movementType: import(".prisma/client").$Enums.MovementType;
+        quantity: number;
         fromStatus: import(".prisma/client").$Enums.InventoryStatus | null;
         toStatus: import(".prisma/client").$Enums.InventoryStatus | null;
         referenceType: string | null;
         referenceId: string | null;
-        referenceNo: string | null;
     }>>;
     adjustStock(dto: InventoryAdjustmentDto, currentUserId: string, tokenSellerId?: string): Promise<{
         id: string;
-        createdAt: Date;
         status: import(".prisma/client").$Enums.InventoryStatus;
         sellerId: string;
-        productId: string;
+        createdAt: Date;
         notes: string | null;
+        productId: string;
         quantity: number;
         referenceId: string | null;
-        adjustedBy: string;
         reason: string;
+        adjustedBy: string;
     }>;
 }

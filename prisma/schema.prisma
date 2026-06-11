@@ -524,6 +524,7 @@ model Outbound {
   courierId        String?
   courier          Courier?       @relation(fields: [courierId], references: [id])
   trackingNumber   String?
+  sellerAwbNo      String?
   shippingCost     Decimal?       @db.Decimal(15, 2)
   codAmount        Decimal?       @db.Decimal(15, 2)
   notes            String?
@@ -677,7 +678,7 @@ model Return {
   outboundId   String?
   outbound     Outbound?    @relation(fields: [outboundId], references: [id])
   status       ReturnStatus @default(SUBMITTED)
-  reason       String
+  reason       String?
   notes        String?
   inspectedAt  DateTime?
   completedAt  DateTime?

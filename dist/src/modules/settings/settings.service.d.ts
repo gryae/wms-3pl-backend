@@ -8,17 +8,17 @@ export declare class SettingsService {
     findAll(): Promise<{
         id: string;
         updatedAt: Date;
-        label: string | null;
         key: string;
         value: string;
+        label: string | null;
         group: string | null;
     }[]>;
     findByKey(key: string): Promise<{
         id: string;
         updatedAt: Date;
-        label: string | null;
         key: string;
         value: string;
+        label: string | null;
         group: string | null;
     }>;
     updateMany(dto: UpdateSettingsDto, currentUserId: string): Promise<any[]>;

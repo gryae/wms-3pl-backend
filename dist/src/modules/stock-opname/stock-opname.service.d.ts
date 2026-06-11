@@ -13,40 +13,44 @@ export declare class StockOpnameService {
     constructor(prisma: PrismaService, inventoryService: InventoryService, auditLogService: AuditLogService, notificationHelper: NotificationHelperService);
     create(dto: CreateOpnameDto, currentUserId: string): Promise<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         status: import(".prisma/client").$Enums.StockOpnameStatus;
         sellerId: string;
-        completedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         notes: string | null;
+        completedAt: Date | null;
         createdById: string;
         opnameNo: string;
         countedAt: Date | null;
     }>;
     startCounting(id: string, currentUserId: string): Promise<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         status: import(".prisma/client").$Enums.StockOpnameStatus;
         sellerId: string;
-        completedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         notes: string | null;
+        completedAt: Date | null;
         createdById: string;
         opnameNo: string;
         countedAt: Date | null;
     }>;
     recordCount(id: string, dto: RecordCountDto, currentUserId: string): Promise<{
+        createdBy: {
+            email: string;
+            name: string;
+        };
         items: ({
             product: {
                 id: string;
                 name: string;
-                description: string | null;
+                status: import(".prisma/client").$Enums.ProductStatus;
+                sellerId: string;
+                deletedAt: Date | null;
                 createdAt: Date;
                 updatedAt: Date;
                 length: import("@prisma/client/runtime/library").Decimal | null;
-                deletedAt: Date | null;
-                status: import(".prisma/client").$Enums.ProductStatus;
-                sellerId: string;
+                description: string | null;
                 sku: string;
                 barcode: string | null;
                 hpp: import("@prisma/client/runtime/library").Decimal;
@@ -58,50 +62,46 @@ export declare class StockOpnameService {
             };
         } & {
             id: string;
-            productId: string;
             notes: string | null;
+            productId: string;
             reason: string | null;
             systemQty: number;
             physicalQty: number;
             variance: number;
             opnameId: string;
         })[];
-        createdBy: {
-            name: string;
-            email: string;
-        };
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         status: import(".prisma/client").$Enums.StockOpnameStatus;
         sellerId: string;
-        completedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         notes: string | null;
+        completedAt: Date | null;
         createdById: string;
         opnameNo: string;
         countedAt: Date | null;
     }>;
     complete(id: string, currentUserId: string): Promise<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         status: import(".prisma/client").$Enums.StockOpnameStatus;
         sellerId: string;
-        completedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         notes: string | null;
+        completedAt: Date | null;
         createdById: string;
         opnameNo: string;
         countedAt: Date | null;
     }>;
     cancel(id: string, currentUserId: string): Promise<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         status: import(".prisma/client").$Enums.StockOpnameStatus;
         sellerId: string;
-        completedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         notes: string | null;
+        completedAt: Date | null;
         createdById: string;
         opnameNo: string;
         countedAt: Date | null;
@@ -112,28 +112,32 @@ export declare class StockOpnameService {
         };
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         status: import(".prisma/client").$Enums.StockOpnameStatus;
         sellerId: string;
-        completedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         notes: string | null;
+        completedAt: Date | null;
         createdById: string;
         opnameNo: string;
         countedAt: Date | null;
     }>>;
     findOne(id: string, sellerId?: string): Promise<{
+        createdBy: {
+            email: string;
+            name: string;
+        };
         items: ({
             product: {
                 id: string;
                 name: string;
-                description: string | null;
+                status: import(".prisma/client").$Enums.ProductStatus;
+                sellerId: string;
+                deletedAt: Date | null;
                 createdAt: Date;
                 updatedAt: Date;
                 length: import("@prisma/client/runtime/library").Decimal | null;
-                deletedAt: Date | null;
-                status: import(".prisma/client").$Enums.ProductStatus;
-                sellerId: string;
+                description: string | null;
                 sku: string;
                 barcode: string | null;
                 hpp: import("@prisma/client/runtime/library").Decimal;
@@ -145,26 +149,22 @@ export declare class StockOpnameService {
             };
         } & {
             id: string;
-            productId: string;
             notes: string | null;
+            productId: string;
             reason: string | null;
             systemQty: number;
             physicalQty: number;
             variance: number;
             opnameId: string;
         })[];
-        createdBy: {
-            name: string;
-            email: string;
-        };
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         status: import(".prisma/client").$Enums.StockOpnameStatus;
         sellerId: string;
-        completedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         notes: string | null;
+        completedAt: Date | null;
         createdById: string;
         opnameNo: string;
         countedAt: Date | null;

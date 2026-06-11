@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString, IsArray, ValidateNested, IsInt, Min } from 'class-validator';
+import { IsOptional, IsString, IsArray, ValidateNested, IsInt, Min, IsNotEmpty } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -31,10 +31,10 @@ export class CreateReturnDto {
   @IsString()
   outboundId?: string;
 
-  @ApiProperty({ example: 'Wrong product size shipped' })
-  @IsNotEmpty()
+  @ApiPropertyOptional({ example: 'Wrong product size shipped' })
+  @IsOptional()
   @IsString()
-  reason: string;
+  reason?: string;
 
   @ApiPropertyOptional()
   @IsOptional()

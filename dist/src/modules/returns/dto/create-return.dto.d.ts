@@ -6,7 +6,7 @@ export declare class ReturnItemDto {
 export declare class CreateReturnDto {
     sellerId: string;
     outboundId?: string;
-    reason: string;
+    reason?: string;
     notes?: string;
     items: ReturnItemDto[];
 }

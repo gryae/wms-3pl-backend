@@ -84,6 +84,11 @@ export class CreateOutboundDto {
   @IsString()
   notes?: string;
 
+  @ApiPropertyOptional({ description: 'AWB/tracking number provided by seller (optional, warehouse fills on ship if empty)' })
+  @IsOptional()
+  @IsString()
+  sellerAwbNo?: string;
+
   @ApiProperty({ type: [OutboundItemDto] })
   @IsArray()
   @ValidateNested({ each: true })

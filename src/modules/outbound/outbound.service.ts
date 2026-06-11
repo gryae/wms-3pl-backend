@@ -18,7 +18,7 @@ export class OutboundService {
   ) {}
 
   async create(dto: CreateOutboundDto, currentUserId: string) {
-    const { sellerId, type, recipientName, recipientPhone, recipientAddress, recipientCity, recipientProvince, recipientPostcode, courierId, shippingCost, codAmount, notes, items } = dto;
+    const { sellerId, type, recipientName, recipientPhone, recipientAddress, recipientCity, recipientProvince, recipientPostcode, courierId, shippingCost, codAmount, notes, sellerAwbNo, items } = dto;
 
     if (items.length === 0) {
       throw new BadRequestException('Outbound order must contain at least one item');
@@ -59,6 +59,7 @@ export class OutboundService {
           shippingCost,
           codAmount,
           notes,
+          sellerAwbNo,
           status: OutboundStatus.DRAFT,
           createdById: currentUserId,
         },

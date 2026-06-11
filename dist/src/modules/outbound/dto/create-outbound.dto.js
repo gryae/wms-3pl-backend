@@ -117,6 +117,12 @@ __decorate([
     __metadata("design:type", String)
 ], CreateOutboundDto.prototype, "notes", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: 'AWB/tracking number provided by seller (optional, warehouse fills on ship if empty)' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateOutboundDto.prototype, "sellerAwbNo", void 0);
+__decorate([
     (0, swagger_1.ApiProperty)({ type: [OutboundItemDto] }),
     (0, class_validator_1.IsArray)(),
     (0, class_validator_1.ValidateNested)({ each: true }),

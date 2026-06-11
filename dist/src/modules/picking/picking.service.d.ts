@@ -22,56 +22,56 @@ export declare class PickingService {
         };
         assignee: {
             id: string;
-            name: string;
             email: string;
+            name: string;
         };
     } & {
         id: string;
+        status: import(".prisma/client").$Enums.PickTaskStatus;
         createdAt: Date;
         updatedAt: Date;
-        status: import(".prisma/client").$Enums.PickTaskStatus;
+        notes: string | null;
+        completedAt: Date | null;
         outboundId: string;
         assigneeId: string | null;
         startedAt: Date | null;
-        completedAt: Date | null;
-        notes: string | null;
     }>>;
     findOne(id: string, sellerId?: string): Promise<{
         outbound: {
-            courier: {
-                id: string;
-                code: string;
-                name: string;
-                createdAt: Date;
-                updatedAt: Date;
-                logo: string | null;
-                isActive: boolean;
-                deletedAt: Date | null;
-            };
             seller: {
                 id: string;
-                code: string;
-                name: string;
-                createdAt: Date;
-                updatedAt: Date;
-                deletedAt: Date | null;
                 email: string | null;
+                name: string;
                 phone: string | null;
                 status: import(".prisma/client").$Enums.SellerStatus;
+                deletedAt: Date | null;
+                createdAt: Date;
+                updatedAt: Date;
+                code: string;
                 address: string | null;
                 logoUrl: string | null;
+            };
+            courier: {
+                id: string;
+                name: string;
+                deletedAt: Date | null;
+                createdAt: Date;
+                updatedAt: Date;
+                code: string;
+                logo: string | null;
+                isActive: boolean;
             };
             items: ({
                 product: {
                     id: string;
                     name: string;
-                    description: string | null;
+                    status: import(".prisma/client").$Enums.ProductStatus;
+                    sellerId: string;
+                    deletedAt: Date | null;
                     createdAt: Date;
                     updatedAt: Date;
                     length: import("@prisma/client/runtime/library").Decimal | null;
-                    deletedAt: Date | null;
-                    status: import(".prisma/client").$Enums.ProductStatus;
-                    sellerId: string;
+                    description: string | null;
                     sku: string;
                     barcode: string | null;
                     hpp: import("@prisma/client/runtime/library").Decimal;
@@ -83,23 +83,26 @@ export declare class PickingService {
                 };
             } & {
                 id: string;
-                productId: string;
-                outboundId: string;
                 notes: string | null;
+                productId: string;
                 quantity: number;
+                outboundId: string;
                 pickedQty: number;
                 packedQty: number;
             })[];
         } & {
             id: string;
-            createdAt: Date;
-            updatedAt: Date;
-            deletedAt: Date | null;
             status: import(".prisma/client").$Enums.OutboundStatus;
             sellerId: string;
+            deletedAt: Date | null;
+            createdAt: Date;
+            updatedAt: Date;
             type: import(".prisma/client").$Enums.OutboundType;
-            completedAt: Date | null;
             notes: string | null;
+            completedAt: Date | null;
+            cancelledAt: Date | null;
+            cancelReason: string | null;
+            createdById: string;
             outboundNo: string;
             recipientName: string;
             recipientPhone: string;
@@ -107,89 +110,87 @@ export declare class PickingService {
             recipientCity: string | null;
             recipientProvince: string | null;
             recipientPostcode: string | null;
-            courierId: string | null;
             trackingNumber: string | null;
+            sellerAwbNo: string | null;
             shippingCost: import("@prisma/client/runtime/library").Decimal | null;
             codAmount: import("@prisma/client/runtime/library").Decimal | null;
             pickedAt: Date | null;
             packedAt: Date | null;
             shippedAt: Date | null;
-            cancelledAt: Date | null;
-            cancelReason: string | null;
-            createdById: string;
+            courierId: string | null;
         };
         items: {
             id: string;
-            productId: string;
             notes: string | null;
+            productId: string;
             pickedQty: number;
-            pickTaskId: string;
             requiredQty: number;
             location: string | null;
+            pickTaskId: string;
         }[];
         assignee: {
             id: string;
-            name: string;
             email: string;
+            name: string;
         };
     } & {
         id: string;
+        status: import(".prisma/client").$Enums.PickTaskStatus;
         createdAt: Date;
         updatedAt: Date;
-        status: import(".prisma/client").$Enums.PickTaskStatus;
+        notes: string | null;
+        completedAt: Date | null;
         outboundId: string;
         assigneeId: string | null;
         startedAt: Date | null;
-        completedAt: Date | null;
-        notes: string | null;
     }>;
     assign(id: string, dto: AssignPickerDto, currentUserId: string): Promise<{
         assignee: {
             id: string;
-            name: string;
-            createdAt: Date;
-            updatedAt: Date;
-            role: import(".prisma/client").$Enums.UserRole;
-            deletedAt: Date | null;
             email: string;
             password: string;
+            name: string;
             phone: string | null;
+            role: import(".prisma/client").$Enums.UserRole;
             status: import(".prisma/client").$Enums.UserStatus;
             sellerId: string | null;
             avatarUrl: string | null;
             lastLoginAt: Date | null;
+            deletedAt: Date | null;
+            createdAt: Date;
+            updatedAt: Date;
         };
     } & {
         id: string;
+        status: import(".prisma/client").$Enums.PickTaskStatus;
         createdAt: Date;
         updatedAt: Date;
-        status: import(".prisma/client").$Enums.PickTaskStatus;
+        notes: string | null;
+        completedAt: Date | null;
         outboundId: string;
         assigneeId: string | null;
         startedAt: Date | null;
-        completedAt: Date | null;
-        notes: string | null;
     }>;
     start(id: string, currentUserId: string): Promise<{
         id: string;
+        status: import(".prisma/client").$Enums.PickTaskStatus;
         createdAt: Date;
         updatedAt: Date;
-        status: import(".prisma/client").$Enums.PickTaskStatus;
+        notes: string | null;
+        completedAt: Date | null;
         outboundId: string;
         assigneeId: string | null;
         startedAt: Date | null;
-        completedAt: Date | null;
-        notes: string | null;
     }>;
     confirm(id: string, dto: ConfirmPickDto, currentUserId: string): Promise<{
         id: string;
+        status: import(".prisma/client").$Enums.PickTaskStatus;
         createdAt: Date;
         updatedAt: Date;
-        status: import(".prisma/client").$Enums.PickTaskStatus;
+        notes: string | null;
+        completedAt: Date | null;
         outboundId: string;
         assigneeId: string | null;
         startedAt: Date | null;
-        completedAt: Date | null;
-        notes: string | null;
     }>;
 }

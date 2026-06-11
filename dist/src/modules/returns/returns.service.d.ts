@@ -13,53 +13,53 @@ export declare class ReturnsService {
     constructor(prisma: PrismaService, inventoryService: InventoryService, auditLogService: AuditLogService, notificationHelper: NotificationHelperService);
     create(dto: CreateReturnDto, currentUserId: string): Promise<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         status: import(".prisma/client").$Enums.ReturnStatus;
         sellerId: string;
-        outboundId: string | null;
-        completedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         notes: string | null;
+        completedAt: Date | null;
         createdById: string;
-        reason: string;
+        reason: string | null;
+        outboundId: string | null;
         returnNo: string;
         inspectedAt: Date | null;
         inspectedById: string | null;
     }>;
     startInspecting(id: string, currentUserId: string): Promise<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         status: import(".prisma/client").$Enums.ReturnStatus;
         sellerId: string;
-        outboundId: string | null;
-        completedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         notes: string | null;
+        completedAt: Date | null;
         createdById: string;
-        reason: string;
+        reason: string | null;
+        outboundId: string | null;
         returnNo: string;
         inspectedAt: Date | null;
         inspectedById: string | null;
     }>;
     inspectAndComplete(id: string, dto: InspectReturnDto, currentUserId: string): Promise<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         status: import(".prisma/client").$Enums.ReturnStatus;
         sellerId: string;
-        outboundId: string | null;
-        completedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         notes: string | null;
+        completedAt: Date | null;
         createdById: string;
-        reason: string;
+        reason: string | null;
+        outboundId: string | null;
         returnNo: string;
         inspectedAt: Date | null;
         inspectedById: string | null;
     }>;
     findAll(paginationDto: PaginationDto, sellerId?: string): Promise<import("../../common/dto/pagination.dto").PaginatedResult<{
         seller: {
-            code: string;
             name: string;
+            code: string;
         };
         createdBy: {
             name: string;
@@ -69,30 +69,46 @@ export declare class ReturnsService {
         };
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         status: import(".prisma/client").$Enums.ReturnStatus;
         sellerId: string;
-        outboundId: string | null;
-        completedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         notes: string | null;
+        completedAt: Date | null;
         createdById: string;
-        reason: string;
+        reason: string | null;
+        outboundId: string | null;
         returnNo: string;
         inspectedAt: Date | null;
         inspectedById: string | null;
     }>>;
     findOne(id: string, sellerId?: string): Promise<{
-        outbound: {
+        seller: {
             id: string;
+            email: string | null;
+            name: string;
+            phone: string | null;
+            status: import(".prisma/client").$Enums.SellerStatus;
+            deletedAt: Date | null;
             createdAt: Date;
             updatedAt: Date;
-            deletedAt: Date | null;
+            code: string;
+            address: string | null;
+            logoUrl: string | null;
+        };
+        outbound: {
+            id: string;
             status: import(".prisma/client").$Enums.OutboundStatus;
             sellerId: string;
+            deletedAt: Date | null;
+            createdAt: Date;
+            updatedAt: Date;
             type: import(".prisma/client").$Enums.OutboundType;
-            completedAt: Date | null;
             notes: string | null;
+            completedAt: Date | null;
+            cancelledAt: Date | null;
+            cancelReason: string | null;
+            createdById: string;
             outboundNo: string;
             recipientName: string;
             recipientPhone: string;
@@ -100,41 +116,30 @@ export declare class ReturnsService {
             recipientCity: string | null;
             recipientProvince: string | null;
             recipientPostcode: string | null;
-            courierId: string | null;
             trackingNumber: string | null;
+            sellerAwbNo: string | null;
             shippingCost: import("@prisma/client/runtime/library").Decimal | null;
             codAmount: import("@prisma/client/runtime/library").Decimal | null;
             pickedAt: Date | null;
             packedAt: Date | null;
             shippedAt: Date | null;
-            cancelledAt: Date | null;
-            cancelReason: string | null;
-            createdById: string;
+            courierId: string | null;
         };
-        seller: {
-            id: string;
-            code: string;
+        createdBy: {
+            email: string;
             name: string;
-            createdAt: Date;
-            updatedAt: Date;
-            deletedAt: Date | null;
-            email: string | null;
-            phone: string | null;
-            status: import(".prisma/client").$Enums.SellerStatus;
-            address: string | null;
-            logoUrl: string | null;
         };
         items: ({
             product: {
                 id: string;
                 name: string;
-                description: string | null;
+                status: import(".prisma/client").$Enums.ProductStatus;
+                sellerId: string;
+                deletedAt: Date | null;
                 createdAt: Date;
                 updatedAt: Date;
                 length: import("@prisma/client/runtime/library").Decimal | null;
-                deletedAt: Date | null;
-                status: import(".prisma/client").$Enums.ProductStatus;
-                sellerId: string;
+                description: string | null;
                 sku: string;
                 barcode: string | null;
                 hpp: import("@prisma/client/runtime/library").Decimal;
@@ -146,18 +151,14 @@ export declare class ReturnsService {
             };
         } & {
             id: string;
-            productId: string;
             notes: string | null;
-            quantity: number;
+            productId: string;
             rejectQty: number;
+            quantity: number;
             returnId: string;
             goodQty: number;
             damagedQty: number;
         })[];
-        createdBy: {
-            name: string;
-            email: string;
-        };
         timelines: {
             id: string;
             createdAt: Date;
@@ -172,15 +173,15 @@ export declare class ReturnsService {
         };
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         status: import(".prisma/client").$Enums.ReturnStatus;
         sellerId: string;
-        outboundId: string | null;
-        completedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         notes: string | null;
+        completedAt: Date | null;
         createdById: string;
-        reason: string;
+        reason: string | null;
+        outboundId: string | null;
         returnNo: string;
         inspectedAt: Date | null;
         inspectedById: string | null;

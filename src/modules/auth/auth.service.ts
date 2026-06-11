@@ -57,7 +57,7 @@ export class AuthService {
         token: tokens.accessToken,
         ipAddress,
         userAgent,
-        expiresAt: new Date(Date.now() + 15 * 60 * 1000), // 15 mins
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
       },
     });
 
@@ -161,7 +161,7 @@ export class AuthService {
         token: tokens.accessToken,
         ipAddress,
         userAgent,
-        expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
       },
     });
 
@@ -270,7 +270,7 @@ export class AuthService {
 
     const accessToken = await this.jwtService.signAsync(payload, {
       secret: this.configService.get<string>('JWT_SECRET', 'super_secret_jwt_key_change_in_production_min_32_chars'),
-      expiresIn: this.configService.get<string>('JWT_EXPIRES_IN', '15m'),
+      expiresIn: this.configService.get<string>('JWT_EXPIRES_IN', '24h'),
     });
 
     const refreshToken = await this.jwtService.signAsync(payload, {

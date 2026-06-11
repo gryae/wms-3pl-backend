@@ -51,7 +51,7 @@ let AuthService = class AuthService {
                 token: tokens.accessToken,
                 ipAddress,
                 userAgent,
-                expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+                expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
             },
         });
         await this.prisma.refreshToken.create({
@@ -132,7 +132,7 @@ let AuthService = class AuthService {
                 token: tokens.accessToken,
                 ipAddress,
                 userAgent,
-                expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+                expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
             },
         });
         return tokens;
@@ -215,7 +215,7 @@ let AuthService = class AuthService {
         const payload = { email, role, sellerId, sub: userId };
         const accessToken = await this.jwtService.signAsync(payload, {
             secret: this.configService.get('JWT_SECRET', 'super_secret_jwt_key_change_in_production_min_32_chars'),
-            expiresIn: this.configService.get('JWT_EXPIRES_IN', '15m'),
+            expiresIn: this.configService.get('JWT_EXPIRES_IN', '24h'),
         });
         const refreshToken = await this.jwtService.signAsync(payload, {
             secret: this.configService.get('JWT_REFRESH_SECRET', 'super_secret_refresh_key_change_in_production_min_32_chars'),

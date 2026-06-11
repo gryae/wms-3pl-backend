@@ -5,19 +5,19 @@ export declare class ReportsService {
     constructor(prisma: PrismaService);
     getInventoryReport(paginationDto: PaginationDto, sellerId?: string): Promise<({
         seller: {
-            code: string;
             name: string;
+            code: string;
         };
         product: {
             id: string;
             name: string;
-            description: string | null;
+            status: import(".prisma/client").$Enums.ProductStatus;
+            sellerId: string;
+            deletedAt: Date | null;
             createdAt: Date;
             updatedAt: Date;
             length: import("@prisma/client/runtime/library").Decimal | null;
-            deletedAt: Date | null;
-            status: import(".prisma/client").$Enums.ProductStatus;
-            sellerId: string;
+            description: string | null;
             sku: string;
             barcode: string | null;
             hpp: import("@prisma/client/runtime/library").Decimal;
@@ -29,8 +29,8 @@ export declare class ReportsService {
         };
     } & {
         id: string;
-        updatedAt: Date;
         sellerId: string;
+        updatedAt: Date;
         productId: string;
         available: number;
         reserved: number;
@@ -40,20 +40,20 @@ export declare class ReportsService {
     exportInventoryExcel(sellerId?: string): Promise<Buffer>;
     getInboundReport(startDate?: string, endDate?: string, sellerId?: string): Promise<({
         seller: {
-            code: string;
             name: string;
+            code: string;
         };
         items: ({
             product: {
                 id: string;
                 name: string;
-                description: string | null;
+                status: import(".prisma/client").$Enums.ProductStatus;
+                sellerId: string;
+                deletedAt: Date | null;
                 createdAt: Date;
                 updatedAt: Date;
                 length: import("@prisma/client/runtime/library").Decimal | null;
-                deletedAt: Date | null;
-                status: import(".prisma/client").$Enums.ProductStatus;
-                sellerId: string;
+                description: string | null;
                 sku: string;
                 barcode: string | null;
                 hpp: import("@prisma/client/runtime/library").Decimal;
@@ -65,51 +65,51 @@ export declare class ReportsService {
             };
         } & {
             id: string;
-            productId: string;
             notes: string | null;
             inboundId: string;
+            productId: string;
             expectedQty: number;
             receivedQty: number;
             rejectQty: number;
         })[];
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        deletedAt: Date | null;
         status: import(".prisma/client").$Enums.InboundStatus;
         sellerId: string;
+        deletedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         type: import(".prisma/client").$Enums.InboundType;
-        completedAt: Date | null;
+        inboundNo: string;
+        referenceNo: string | null;
         notes: string | null;
+        receivedAt: Date | null;
+        completedAt: Date | null;
         cancelledAt: Date | null;
         cancelReason: string | null;
         createdById: string;
-        referenceNo: string | null;
-        inboundNo: string;
-        receivedAt: Date | null;
         receivedById: string | null;
     })[]>;
     exportInboundExcel(startDate?: string, endDate?: string, sellerId?: string): Promise<Buffer>;
     getOutboundReport(startDate?: string, endDate?: string, sellerId?: string): Promise<({
-        courier: {
-            name: string;
-        };
         seller: {
+            name: string;
             code: string;
+        };
+        courier: {
             name: string;
         };
         items: ({
             product: {
                 id: string;
                 name: string;
-                description: string | null;
+                status: import(".prisma/client").$Enums.ProductStatus;
+                sellerId: string;
+                deletedAt: Date | null;
                 createdAt: Date;
                 updatedAt: Date;
                 length: import("@prisma/client/runtime/library").Decimal | null;
-                deletedAt: Date | null;
-                status: import(".prisma/client").$Enums.ProductStatus;
-                sellerId: string;
+                description: string | null;
                 sku: string;
                 barcode: string | null;
                 hpp: import("@prisma/client/runtime/library").Decimal;
@@ -121,23 +121,26 @@ export declare class ReportsService {
             };
         } & {
             id: string;
-            productId: string;
-            outboundId: string;
             notes: string | null;
+            productId: string;
             quantity: number;
+            outboundId: string;
             pickedQty: number;
             packedQty: number;
         })[];
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        deletedAt: Date | null;
         status: import(".prisma/client").$Enums.OutboundStatus;
         sellerId: string;
+        deletedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         type: import(".prisma/client").$Enums.OutboundType;
-        completedAt: Date | null;
         notes: string | null;
+        completedAt: Date | null;
+        cancelledAt: Date | null;
+        cancelReason: string | null;
+        createdById: string;
         outboundNo: string;
         recipientName: string;
         recipientPhone: string;
@@ -145,34 +148,32 @@ export declare class ReportsService {
         recipientCity: string | null;
         recipientProvince: string | null;
         recipientPostcode: string | null;
-        courierId: string | null;
         trackingNumber: string | null;
+        sellerAwbNo: string | null;
         shippingCost: import("@prisma/client/runtime/library").Decimal | null;
         codAmount: import("@prisma/client/runtime/library").Decimal | null;
         pickedAt: Date | null;
         packedAt: Date | null;
         shippedAt: Date | null;
-        cancelledAt: Date | null;
-        cancelReason: string | null;
-        createdById: string;
+        courierId: string | null;
     })[]>;
     exportOutboundExcel(startDate?: string, endDate?: string, sellerId?: string): Promise<Buffer>;
     getReturnReport(startDate?: string, endDate?: string, sellerId?: string): Promise<({
         seller: {
-            code: string;
             name: string;
+            code: string;
         };
         items: ({
             product: {
                 id: string;
                 name: string;
-                description: string | null;
+                status: import(".prisma/client").$Enums.ProductStatus;
+                sellerId: string;
+                deletedAt: Date | null;
                 createdAt: Date;
                 updatedAt: Date;
                 length: import("@prisma/client/runtime/library").Decimal | null;
-                deletedAt: Date | null;
-                status: import(".prisma/client").$Enums.ProductStatus;
-                sellerId: string;
+                description: string | null;
                 sku: string;
                 barcode: string | null;
                 hpp: import("@prisma/client/runtime/library").Decimal;
@@ -184,25 +185,25 @@ export declare class ReportsService {
             };
         } & {
             id: string;
-            productId: string;
             notes: string | null;
-            quantity: number;
+            productId: string;
             rejectQty: number;
+            quantity: number;
             returnId: string;
             goodQty: number;
             damagedQty: number;
         })[];
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         status: import(".prisma/client").$Enums.ReturnStatus;
         sellerId: string;
-        outboundId: string | null;
-        completedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         notes: string | null;
+        completedAt: Date | null;
         createdById: string;
-        reason: string;
+        reason: string | null;
+        outboundId: string | null;
         returnNo: string;
         inspectedAt: Date | null;
         inspectedById: string | null;
@@ -216,27 +217,30 @@ export declare class ReportsService {
             outbound: {
                 seller: {
                     id: string;
-                    code: string;
-                    name: string;
-                    createdAt: Date;
-                    updatedAt: Date;
-                    deletedAt: Date | null;
                     email: string | null;
+                    name: string;
                     phone: string | null;
                     status: import(".prisma/client").$Enums.SellerStatus;
+                    deletedAt: Date | null;
+                    createdAt: Date;
+                    updatedAt: Date;
+                    code: string;
                     address: string | null;
                     logoUrl: string | null;
                 };
             } & {
                 id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                deletedAt: Date | null;
                 status: import(".prisma/client").$Enums.OutboundStatus;
                 sellerId: string;
+                deletedAt: Date | null;
+                createdAt: Date;
+                updatedAt: Date;
                 type: import(".prisma/client").$Enums.OutboundType;
-                completedAt: Date | null;
                 notes: string | null;
+                completedAt: Date | null;
+                cancelledAt: Date | null;
+                cancelReason: string | null;
+                createdById: string;
                 outboundNo: string;
                 recipientName: string;
                 recipientPhone: string;
@@ -244,16 +248,14 @@ export declare class ReportsService {
                 recipientCity: string | null;
                 recipientProvince: string | null;
                 recipientPostcode: string | null;
-                courierId: string | null;
                 trackingNumber: string | null;
+                sellerAwbNo: string | null;
                 shippingCost: import("@prisma/client/runtime/library").Decimal | null;
                 codAmount: import("@prisma/client/runtime/library").Decimal | null;
                 pickedAt: Date | null;
                 packedAt: Date | null;
                 shippedAt: Date | null;
-                cancelledAt: Date | null;
-                cancelReason: string | null;
-                createdById: string;
+                courierId: string | null;
             };
         } & {
             id: string;
@@ -262,12 +264,12 @@ export declare class ReportsService {
         })[];
     } & {
         id: string;
+        status: import(".prisma/client").$Enums.ManifestStatus;
         createdAt: Date;
         updatedAt: Date;
-        status: import(".prisma/client").$Enums.ManifestStatus;
         notes: string | null;
-        courierId: string;
         createdById: string;
+        courierId: string;
         manifestNo: string;
         date: Date;
         closedAt: Date | null;
@@ -275,8 +277,8 @@ export declare class ReportsService {
     exportManifestExcel(startDate?: string, endDate?: string): Promise<Buffer>;
     getStockMovementReport(startDate?: string, endDate?: string, sellerId?: string): Promise<({
         seller: {
-            code: string;
             name: string;
+            code: string;
         };
         product: {
             name: string;
@@ -284,18 +286,18 @@ export declare class ReportsService {
         };
     } & {
         id: string;
-        createdAt: Date;
         sellerId: string;
-        productId: string;
+        createdAt: Date;
+        referenceNo: string | null;
         notes: string | null;
         createdBy: string | null;
-        quantity: number;
+        productId: string;
         movementType: import(".prisma/client").$Enums.MovementType;
+        quantity: number;
         fromStatus: import(".prisma/client").$Enums.InventoryStatus | null;
         toStatus: import(".prisma/client").$Enums.InventoryStatus | null;
         referenceType: string | null;
         referenceId: string | null;
-        referenceNo: string | null;
     })[]>;
     exportMovementExcel(startDate?: string, endDate?: string, sellerId?: string): Promise<Buffer>;
     getStockOpnameReport(startDate?: string, endDate?: string, sellerId?: string): Promise<({
@@ -303,13 +305,13 @@ export declare class ReportsService {
             product: {
                 id: string;
                 name: string;
-                description: string | null;
+                status: import(".prisma/client").$Enums.ProductStatus;
+                sellerId: string;
+                deletedAt: Date | null;
                 createdAt: Date;
                 updatedAt: Date;
                 length: import("@prisma/client/runtime/library").Decimal | null;
-                deletedAt: Date | null;
-                status: import(".prisma/client").$Enums.ProductStatus;
-                sellerId: string;
+                description: string | null;
                 sku: string;
                 barcode: string | null;
                 hpp: import("@prisma/client/runtime/library").Decimal;
@@ -321,8 +323,8 @@ export declare class ReportsService {
             };
         } & {
             id: string;
-            productId: string;
             notes: string | null;
+            productId: string;
             reason: string | null;
             systemQty: number;
             physicalQty: number;
@@ -331,12 +333,12 @@ export declare class ReportsService {
         })[];
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         status: import(".prisma/client").$Enums.StockOpnameStatus;
         sellerId: string;
-        completedAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
         notes: string | null;
+        completedAt: Date | null;
         createdById: string;
         opnameNo: string;
         countedAt: Date | null;

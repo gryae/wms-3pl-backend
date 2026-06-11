@@ -197,6 +197,10 @@ let InboundService = class InboundService {
         if (inbound.status !== client_1.InboundStatus.RECEIVING) {
             throw new common_1.BadRequestException('Only inbounds currently in RECEIVING status can be completed');
         }
+        const hasAnyQty = inbound.items.some((item) => item.receivedQty > 0 || item.rejectQty > 0);
+        if (!hasAnyQty) {
+            throw new common_1.BadRequestException('Cannot finalize: please record received and/or rejected quantities for at least one item before completing.');
+        }
         const updated = await this.prisma.$transaction(async (tx) => {
             const header = await tx.inbound.update({
                 where: { id },

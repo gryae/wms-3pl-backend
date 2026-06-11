@@ -8,12 +8,12 @@ export declare class ManifestsController {
     constructor(manifestsService: ManifestsService);
     create(dto: CreateManifestDto, currentUserId: string, sellerId?: string): Promise<{
         id: string;
+        status: import(".prisma/client").$Enums.ManifestStatus;
         createdAt: Date;
         updatedAt: Date;
-        status: import(".prisma/client").$Enums.ManifestStatus;
         notes: string | null;
-        courierId: string;
         createdById: string;
+        courierId: string;
         manifestNo: string;
         date: Date;
         closedAt: Date | null;
@@ -27,12 +27,12 @@ export declare class ManifestsController {
         };
     } & {
         id: string;
+        status: import(".prisma/client").$Enums.ManifestStatus;
         createdAt: Date;
         updatedAt: Date;
-        status: import(".prisma/client").$Enums.ManifestStatus;
         notes: string | null;
-        courierId: string;
         createdById: string;
+        courierId: string;
         manifestNo: string;
         date: Date;
         closedAt: Date | null;
@@ -40,39 +40,46 @@ export declare class ManifestsController {
     findOne(id: string, sellerId?: string): Promise<{
         courier: {
             id: string;
-            code: string;
             name: string;
+            deletedAt: Date | null;
             createdAt: Date;
             updatedAt: Date;
+            code: string;
             logo: string | null;
             isActive: boolean;
-            deletedAt: Date | null;
+        };
+        createdBy: {
+            email: string;
+            name: string;
         };
         items: ({
             outbound: {
                 seller: {
                     id: string;
-                    code: string;
-                    name: string;
-                    createdAt: Date;
-                    updatedAt: Date;
-                    deletedAt: Date | null;
                     email: string | null;
+                    name: string;
                     phone: string | null;
                     status: import(".prisma/client").$Enums.SellerStatus;
+                    deletedAt: Date | null;
+                    createdAt: Date;
+                    updatedAt: Date;
+                    code: string;
                     address: string | null;
                     logoUrl: string | null;
                 };
             } & {
                 id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                deletedAt: Date | null;
                 status: import(".prisma/client").$Enums.OutboundStatus;
                 sellerId: string;
+                deletedAt: Date | null;
+                createdAt: Date;
+                updatedAt: Date;
                 type: import(".prisma/client").$Enums.OutboundType;
-                completedAt: Date | null;
                 notes: string | null;
+                completedAt: Date | null;
+                cancelledAt: Date | null;
+                cancelReason: string | null;
+                createdById: string;
                 outboundNo: string;
                 recipientName: string;
                 recipientPhone: string;
@@ -80,34 +87,28 @@ export declare class ManifestsController {
                 recipientCity: string | null;
                 recipientProvince: string | null;
                 recipientPostcode: string | null;
-                courierId: string | null;
                 trackingNumber: string | null;
+                sellerAwbNo: string | null;
                 shippingCost: import("@prisma/client/runtime/library").Decimal | null;
                 codAmount: import("@prisma/client/runtime/library").Decimal | null;
                 pickedAt: Date | null;
                 packedAt: Date | null;
                 shippedAt: Date | null;
-                cancelledAt: Date | null;
-                cancelReason: string | null;
-                createdById: string;
+                courierId: string | null;
             };
         } & {
             id: string;
             outboundId: string;
             manifestId: string;
         })[];
-        createdBy: {
-            name: string;
-            email: string;
-        };
     } & {
         id: string;
+        status: import(".prisma/client").$Enums.ManifestStatus;
         createdAt: Date;
         updatedAt: Date;
-        status: import(".prisma/client").$Enums.ManifestStatus;
         notes: string | null;
-        courierId: string;
         createdById: string;
+        courierId: string;
         manifestNo: string;
         date: Date;
         closedAt: Date | null;
@@ -115,39 +116,46 @@ export declare class ManifestsController {
     addShipments(id: string, dto: AddShipmentsDto, currentUserId: string): Promise<{
         courier: {
             id: string;
-            code: string;
             name: string;
+            deletedAt: Date | null;
             createdAt: Date;
             updatedAt: Date;
+            code: string;
             logo: string | null;
             isActive: boolean;
-            deletedAt: Date | null;
+        };
+        createdBy: {
+            email: string;
+            name: string;
         };
         items: ({
             outbound: {
                 seller: {
                     id: string;
-                    code: string;
-                    name: string;
-                    createdAt: Date;
-                    updatedAt: Date;
-                    deletedAt: Date | null;
                     email: string | null;
+                    name: string;
                     phone: string | null;
                     status: import(".prisma/client").$Enums.SellerStatus;
+                    deletedAt: Date | null;
+                    createdAt: Date;
+                    updatedAt: Date;
+                    code: string;
                     address: string | null;
                     logoUrl: string | null;
                 };
             } & {
                 id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                deletedAt: Date | null;
                 status: import(".prisma/client").$Enums.OutboundStatus;
                 sellerId: string;
+                deletedAt: Date | null;
+                createdAt: Date;
+                updatedAt: Date;
                 type: import(".prisma/client").$Enums.OutboundType;
-                completedAt: Date | null;
                 notes: string | null;
+                completedAt: Date | null;
+                cancelledAt: Date | null;
+                cancelReason: string | null;
+                createdById: string;
                 outboundNo: string;
                 recipientName: string;
                 recipientPhone: string;
@@ -155,46 +163,40 @@ export declare class ManifestsController {
                 recipientCity: string | null;
                 recipientProvince: string | null;
                 recipientPostcode: string | null;
-                courierId: string | null;
                 trackingNumber: string | null;
+                sellerAwbNo: string | null;
                 shippingCost: import("@prisma/client/runtime/library").Decimal | null;
                 codAmount: import("@prisma/client/runtime/library").Decimal | null;
                 pickedAt: Date | null;
                 packedAt: Date | null;
                 shippedAt: Date | null;
-                cancelledAt: Date | null;
-                cancelReason: string | null;
-                createdById: string;
+                courierId: string | null;
             };
         } & {
             id: string;
             outboundId: string;
             manifestId: string;
         })[];
-        createdBy: {
-            name: string;
-            email: string;
-        };
     } & {
         id: string;
+        status: import(".prisma/client").$Enums.ManifestStatus;
         createdAt: Date;
         updatedAt: Date;
-        status: import(".prisma/client").$Enums.ManifestStatus;
         notes: string | null;
-        courierId: string;
         createdById: string;
+        courierId: string;
         manifestNo: string;
         date: Date;
         closedAt: Date | null;
     }>;
     closeManifest(id: string, currentUserId: string): Promise<{
         id: string;
+        status: import(".prisma/client").$Enums.ManifestStatus;
         createdAt: Date;
         updatedAt: Date;
-        status: import(".prisma/client").$Enums.ManifestStatus;
         notes: string | null;
-        courierId: string;
         createdById: string;
+        courierId: string;
         manifestNo: string;
         date: Date;
         closedAt: Date | null;

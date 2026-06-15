@@ -121,7 +121,8 @@ export class ShippingLabelService {
     const rSubW  = lw - lSubW - 6;
 
     // Vertical sub-divider
-    doc.moveTo(lx + lSubW + 2, sep1Y).lineTo(lx + lSubW + 2, sep1Y + 157)
+    const sep2Y = sep1Y + 152;
+    doc.moveTo(lx + lSubW + 2, sep1Y).lineTo(lx + lSubW + 2, sep2Y)
       .strokeColor('#94a3b8').lineWidth(0.5).stroke();
 
     // ── Penerima (left sub) ──────────────────────────────────────────────────
@@ -176,7 +177,6 @@ export class ShippingLabelService {
     doc.text(`Telepon   : ${ob.seller?.phone || '-'}`, rSubX, ry, { width: rSubW, lineBreak: false });
 
     // ── [5] TOTAL QTY BAR ─────────────────────────────────────────────────────
-    const sep2Y  = sep1Y + 160;
     const tqBarH = 20;
     doc.moveTo(lx, sep2Y).lineTo(lx + lw, sep2Y).strokeColor('#94a3b8').lineWidth(0.5).stroke();
 

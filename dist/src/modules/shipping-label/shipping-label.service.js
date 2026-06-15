@@ -97,7 +97,8 @@ let ShippingLabelService = class ShippingLabelService {
         const lSubW = 183;
         const rSubX = lx + lSubW + 5;
         const rSubW = lw - lSubW - 6;
-        doc.moveTo(lx + lSubW + 2, sep1Y).lineTo(lx + lSubW + 2, sep1Y + 157)
+        const sep2Y = sep1Y + 152;
+        doc.moveTo(lx + lSubW + 2, sep1Y).lineTo(lx + lSubW + 2, sep2Y)
             .strokeColor('#94a3b8').lineWidth(0.5).stroke();
         doc.fillColor('#000000').fontSize(7).font('Helvetica-Bold')
             .text('Penerima :', lx + 2, midY, { lineBreak: false });
@@ -138,7 +139,6 @@ let ShippingLabelService = class ShippingLabelService {
             .text(`Nama      : ${(ob.seller?.name || '-').substring(0, 18)}`, rSubX, ry, { width: rSubW, lineBreak: false });
         ry += 9;
         doc.text(`Telepon   : ${ob.seller?.phone || '-'}`, rSubX, ry, { width: rSubW, lineBreak: false });
-        const sep2Y = sep1Y + 160;
         const tqBarH = 20;
         doc.moveTo(lx, sep2Y).lineTo(lx + lw, sep2Y).strokeColor('#94a3b8').lineWidth(0.5).stroke();
         const halfLW = Math.floor(lw / 2);

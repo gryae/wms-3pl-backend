@@ -13,10 +13,10 @@ exports.ShippingLabelService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../../prisma/prisma.service");
 const PDFDocument = require("pdfkit");
-const LW = 595;
-const LH = 284;
-const M = 5;
-const DX = 390;
+const LW = 482;
+const LH = 221;
+const M = 4;
+const DX = 283;
 let ShippingLabelService = class ShippingLabelService {
     constructor(prisma) {
         this.prisma = prisma;
@@ -42,15 +42,15 @@ let ShippingLabelService = class ShippingLabelService {
         doc.rect(x, y, w, h).fillColor('#ffffff').fill().strokeColor('#000000').lineWidth(0.5).stroke();
         const pat = [2, 4, 1, 3, 2, 5, 2, 1, 4, 2, 3, 1, 2, 4, 5, 1, 3, 2, 4, 1, 3, 2];
         const sv = seed.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
-        let cx = x + 4;
+        let cx = x + 3;
         let i = 0;
         doc.fillColor('#000000');
-        while (cx < x + w - 4) {
-            const bw = (pat[(i + sv) % pat.length] * 0.9) + 0.4;
-            const gw = (pat[(i + 1 + sv) % pat.length] * 0.4) + 0.6;
-            if (cx + bw > x + w - 4)
+        while (cx < x + w - 3) {
+            const bw = (pat[(i + sv) % pat.length] * 0.8) + 0.3;
+            const gw = (pat[(i + 1 + sv) % pat.length] * 0.35) + 0.5;
+            if (cx + bw > x + w - 3)
                 break;
-            doc.rect(cx, y + 2, bw, h - 4).fill();
+            doc.rect(cx, y + 1.5, bw, h - 3).fill();
             cx += bw + gw;
             i++;
         }
@@ -59,157 +59,145 @@ let ShippingLabelService = class ShippingLabelService {
         if (!d)
             return '';
         const dt = new Date(d);
-        const pad = (n) => n.toString().padStart(2, '0');
-        return `${pad(dt.getDate())}/${pad(dt.getMonth() + 1)}/${dt.getFullYear().toString().slice(-2)} ${pad(dt.getHours())}:${pad(dt.getMinutes())}`;
+        const p = (n) => n.toString().padStart(2, '0');
+        return `${p(dt.getDate())}/${p(dt.getMonth() + 1)}/${dt.getFullYear().toString().slice(-2)} ${p(dt.getHours())}:${p(dt.getMinutes())}`;
     }
     drawLabel(doc, ob) {
         const courierName = (ob.courier?.name || 'SELF PICKUP').toUpperCase();
         const bookingNo = ob.trackingNumber || ob.sellerAwbNo || ob.outboundNo;
         const items = ob.items || [];
         const totalQty = items.reduce((s, i) => s + (i.quantity || 0), 0);
-        doc.rect(M / 2, M / 2, LW - M, LH - M).strokeColor('#000000').lineWidth(1).stroke();
+        doc.rect(M / 2, M / 2, LW - M, LH - M).strokeColor('#000000').lineWidth(0.8).stroke();
         const lx = M;
         const lw = DX - M - 1;
-        const hY = M, hH = 22;
-        doc.rect(lx, hY, lw, hH).fillColor('#f1f5f9').fill().strokeColor('#cbd5e1').lineWidth(0.5).stroke();
-        doc.fillColor('#374151').fontSize(7).font('Helvetica')
-            .text('Kode Booking | ', lx + 4, hY + 7, { continued: true, lineBreak: false });
+        const hY = M, hH = 18;
+        doc.rect(lx, hY, lw, hH).fillColor('#f1f5f9').fill().strokeColor('#cbd5e1').lineWidth(0.4).stroke();
+        doc.fillColor('#374151').fontSize(6).font('Helvetica')
+            .text('Kode Booking | ', lx + 3, hY + 5, { continued: true, lineBreak: false });
         doc.font('Helvetica-Bold').fillColor('#0f172a')
             .text(courierName, { lineBreak: false });
-        const badgeW = 66, badgeH = 14;
-        const badgeX = lx + lw - badgeW - 4;
-        doc.rect(badgeX, hY + 4, badgeW, badgeH).fillColor('#1e3a5f').fill();
-        doc.fillColor('#ffffff').fontSize(6.5).font('Helvetica-Bold')
-            .text(courierName.substring(0, 10), badgeX + 2, hY + 8, {
-            width: badgeW - 4, align: 'center', lineBreak: false,
-        });
+        const bW = 52, bH = 12;
+        const bX = lx + lw - bW - 3;
+        doc.rect(bX, hY + 3, bW, bH).fillColor('#1e3a5f').fill();
+        doc.fillColor('#ffffff').fontSize(5.5).font('Helvetica-Bold')
+            .text(courierName.substring(0, 10), bX + 2, hY + 6, { width: bW - 4, align: 'center', lineBreak: false });
         const bcTopY = hY + hH;
-        this.drawBarcode(doc, lx, bcTopY, lw, 30, bookingNo);
-        const numY = bcTopY + 30;
+        this.drawBarcode(doc, lx, bcTopY, lw, 22, bookingNo);
+        const numY = bcTopY + 22;
         const digitStr = bookingNo.replace(/[^A-Z0-9]/gi, '').padEnd(14, '0').substring(0, 14);
-        doc.fillColor('#000000').fontSize(6).font('Helvetica')
-            .text(digitStr.split('').join('  '), lx + 2, numY + 1, {
-            width: lw - 4, align: 'center', lineBreak: false,
-        });
-        const sep1Y = numY + 12;
-        doc.moveTo(lx, sep1Y).lineTo(lx + lw, sep1Y).strokeColor('#94a3b8').lineWidth(0.5).stroke();
+        doc.fillColor('#000000').fontSize(5).font('Helvetica')
+            .text(digitStr.split('').join('  '), lx + 2, numY + 2, { width: lw - 4, align: 'center', lineBreak: false });
+        const sep1Y = numY + 10;
+        doc.moveTo(lx, sep1Y).lineTo(lx + lw, sep1Y).strokeColor('#94a3b8').lineWidth(0.4).stroke();
         const midY = sep1Y + 3;
-        const lSubW = 183;
-        const rSubX = lx + lSubW + 5;
-        const rSubW = lw - lSubW - 6;
-        const sep2Y = sep1Y + 152;
+        const sep2Y = sep1Y + 108;
+        const lSubW = 128;
+        const rSubX = lx + lSubW + 4;
+        const rSubW = lw - lSubW - 5;
         doc.moveTo(lx + lSubW + 2, sep1Y).lineTo(lx + lSubW + 2, sep2Y)
-            .strokeColor('#94a3b8').lineWidth(0.5).stroke();
-        doc.fillColor('#000000').fontSize(7).font('Helvetica-Bold')
+            .strokeColor('#94a3b8').lineWidth(0.4).stroke();
+        doc.fillColor('#000000').fontSize(6).font('Helvetica-Bold')
             .text('Penerima :', lx + 2, midY, { lineBreak: false });
-        doc.fillColor('#6b7280').fontSize(6).font('Helvetica')
-            .text(this.formatDate(ob.createdAt), lx + 2, midY, {
-            width: lSubW - 4, align: 'right', lineBreak: false,
-        });
-        doc.fillColor('#000000').fontSize(8.5).font('Helvetica-Bold')
-            .text(ob.recipientName || '-', lx + 2, midY + 11, { width: lSubW - 4 });
+        doc.fillColor('#6b7280').fontSize(5).font('Helvetica')
+            .text(this.formatDate(ob.createdAt), lx + 2, midY, { width: lSubW - 3, align: 'right', lineBreak: false });
+        doc.fillColor('#000000').fontSize(7).font('Helvetica-Bold')
+            .text(ob.recipientName || '-', lx + 2, midY + 9, { width: lSubW - 3 });
         const addrParts = [
             ob.recipientAddress ? `Alamat: ${ob.recipientAddress}` : 'Alamat: -',
             ob.recipientCity ? `Kec. ${ob.recipientCity}` : null,
             ob.recipientProvince ? `Prov. ${ob.recipientProvince}` : null,
             ob.recipientPostcode || null,
         ].filter(Boolean).join(', ');
-        doc.fillColor('#374151').fontSize(6.5).font('Helvetica')
-            .text(addrParts, lx + 2, midY + 24, { width: lSubW - 4, height: 75, lineGap: 0.5 });
-        doc.fillColor('#000000').fontSize(8).font('Helvetica-Bold')
-            .text(ob.recipientPhone || '', lx + 2, midY + 102, { width: lSubW - 4, lineBreak: false });
+        doc.fillColor('#374151').fontSize(5.5).font('Helvetica')
+            .text(addrParts, lx + 2, midY + 20, { width: lSubW - 3, height: 62, lineGap: 0.3 });
+        doc.fillColor('#000000').fontSize(6.5).font('Helvetica-Bold')
+            .text(ob.recipientPhone || '', lx + 2, midY + 84, { width: lSubW - 3, lineBreak: false });
         let ry = midY;
-        doc.fillColor('#000000').fontSize(7).font('Helvetica-Bold')
+        doc.fillColor('#000000').fontSize(6).font('Helvetica-Bold')
             .text('Jenis Packaging :', rSubX, ry, { lineBreak: false });
-        ry += 11;
-        const packNotes = ob.notes ? ob.notes.substring(0, 100) : '-';
-        doc.fillColor('#374151').fontSize(6.5).font('Helvetica')
-            .text(`"${packNotes}"`, rSubX, ry, { width: rSubW, height: 36, lineGap: 0.5 });
-        ry += 38;
-        doc.fillColor('#000000').fontSize(7).font('Helvetica-Bold')
-            .text('Catatan :', rSubX, ry, { lineBreak: false });
-        ry += 11;
-        doc.fillColor('#374151').fontSize(6.5).font('Helvetica')
-            .text('""', rSubX, ry, { width: rSubW, height: 18 });
-        ry += 20;
-        doc.fillColor('#000000').fontSize(7).font('Helvetica-Bold')
-            .text('Pengirim :', rSubX, ry, { lineBreak: false });
-        ry += 11;
-        doc.fillColor('#000000').fontSize(7).font('Helvetica')
-            .text(`Nama      : ${(ob.seller?.name || '-').substring(0, 18)}`, rSubX, ry, { width: rSubW, lineBreak: false });
         ry += 9;
+        doc.fillColor('#374151').fontSize(5.5).font('Helvetica')
+            .text(`"${(ob.notes || '-').substring(0, 80)}"`, rSubX, ry, { width: rSubW, height: 28, lineGap: 0.3 });
+        ry += 30;
+        doc.fillColor('#000000').fontSize(6).font('Helvetica-Bold')
+            .text('Catatan :', rSubX, ry, { lineBreak: false });
+        ry += 9;
+        doc.fillColor('#374151').fontSize(5.5).font('Helvetica')
+            .text('""', rSubX, ry, { width: rSubW, height: 14 });
+        ry += 16;
+        doc.fillColor('#000000').fontSize(6).font('Helvetica-Bold')
+            .text('Pengirim :', rSubX, ry, { lineBreak: false });
+        ry += 9;
+        doc.fillColor('#000000').fontSize(5.5).font('Helvetica')
+            .text(`Nama      : ${(ob.seller?.name || '-').substring(0, 20)}`, rSubX, ry, { width: rSubW, lineBreak: false });
+        ry += 7;
         doc.text(`Telepon   : ${ob.seller?.phone || '-'}`, rSubX, ry, { width: rSubW, lineBreak: false });
-        const tqBarH = 20;
-        doc.moveTo(lx, sep2Y).lineTo(lx + lw, sep2Y).strokeColor('#94a3b8').lineWidth(0.5).stroke();
+        const tqBarH = 16;
+        doc.moveTo(lx, sep2Y).lineTo(lx + lw, sep2Y).strokeColor('#94a3b8').lineWidth(0.4).stroke();
         const halfLW = Math.floor(lw / 2);
-        doc.fillColor('#000000').fontSize(9).font('Helvetica-Bold')
-            .text(`Total Qty : ${totalQty} Pcs`, lx + 4, sep2Y + 6, {
-            width: halfLW - 8, lineBreak: false,
-        });
+        doc.fillColor('#000000').fontSize(7.5).font('Helvetica-Bold')
+            .text(`Total Qty : ${totalQty} Pcs`, lx + 3, sep2Y + 5, { width: halfLW - 6, lineBreak: false });
         doc.rect(lx + halfLW, sep2Y, lw - halfLW, tqBarH)
-            .fillColor('#e2e8f0').fill().strokeColor('#94a3b8').lineWidth(0.5).stroke();
-        doc.fillColor('#475569').fontSize(8).font('Helvetica-Bold')
-            .text(ob.courier?.code || 'NON-MP', lx + halfLW + 2, sep2Y + 6, {
+            .fillColor('#e2e8f0').fill().strokeColor('#94a3b8').lineWidth(0.4).stroke();
+        doc.fillColor('#475569').fontSize(6.5).font('Helvetica-Bold')
+            .text(ob.courier?.code || 'NON-MP', lx + halfLW + 2, sep2Y + 5, {
             width: lw - halfLW - 4, align: 'center', lineBreak: false,
         });
         doc.moveTo(lx + halfLW, sep2Y).lineTo(lx + halfLW, sep2Y + tqBarH)
-            .strokeColor('#94a3b8').lineWidth(0.5).stroke();
+            .strokeColor('#94a3b8').lineWidth(0.4).stroke();
         const bcBotY = sep2Y + tqBarH;
-        this.drawBarcode(doc, lx, bcBotY, lw, 23, ob.outboundNo);
-        const botNumY = bcBotY + 23;
-        const botStr = `[ ${ob.outboundNo.split('').join(' ')} ]`;
-        doc.fillColor('#000000').fontSize(5.5).font('Helvetica')
-            .text(botStr, lx + 2, botNumY + 1, { width: lw - 4, align: 'center', lineBreak: false });
-        doc.moveTo(DX, M / 2).lineTo(DX, LH - M / 2).strokeColor('#000000').lineWidth(1).stroke();
-        const px = DX + 4;
-        const pw = LW - M - px - 2;
+        this.drawBarcode(doc, lx, bcBotY, lw, 18, ob.outboundNo);
+        const botNumY = bcBotY + 18;
+        doc.fillColor('#000000').fontSize(5).font('Helvetica')
+            .text(`[ ${ob.outboundNo.split('').join(' ')} ]`, lx + 2, botNumY + 1, {
+            width: lw - 4, align: 'center', lineBreak: false,
+        });
+        doc.moveTo(DX, M / 2).lineTo(DX, LH - M / 2).strokeColor('#000000').lineWidth(0.8).stroke();
+        const px = DX + 3;
+        const pw = LW - M - px - 1;
         doc.rect(DX, M, LW - M - DX, hH)
-            .fillColor('#f1f5f9').fill().strokeColor('#cbd5e1').lineWidth(0.5).stroke();
-        const sellerShort = (ob.seller?.name || 'SELLER').substring(0, 16).toUpperCase();
-        doc.fillColor('#000000').fontSize(7.5).font('Helvetica-Bold')
-            .text(`Picklist : (${sellerShort})`, px, M + 7, { lineBreak: false });
-        doc.fontSize(7.5).font('Helvetica-Bold')
-            .text('Qty', px, M + 7, { width: pw, align: 'right', lineBreak: false });
-        doc.moveTo(DX, M + hH).lineTo(LW - M, M + hH)
-            .strokeColor('#000000').lineWidth(0.7).stroke();
-        let iy = M + hH + 3;
-        const maxIY = LH - M - 14;
+            .fillColor('#f1f5f9').fill().strokeColor('#cbd5e1').lineWidth(0.4).stroke();
+        const sellerShort = (ob.seller?.name || 'SELLER').substring(0, 18).toUpperCase();
+        doc.fillColor('#000000').fontSize(6.5).font('Helvetica-Bold')
+            .text(`Picklist : (${sellerShort})`, px, M + 5, { lineBreak: false });
+        doc.fontSize(6.5).font('Helvetica-Bold')
+            .text('Qty', px, M + 5, { width: pw, align: 'right', lineBreak: false });
+        doc.moveTo(DX, M + hH).lineTo(LW - M, M + hH).strokeColor('#000000').lineWidth(0.6).stroke();
+        let iy = M + hH + 2;
+        const maxIY = LH - M - 10;
         for (const item of items) {
-            if (iy + 24 > maxIY)
+            if (iy + 20 > maxIY)
                 break;
-            const sku = (item.product?.sku || item.productId?.substring(0, 14) || '-');
-            const name = (item.product?.name || 'Unknown').substring(0, 24);
+            const sku = item.product?.sku || '-';
+            const name = (item.product?.name || 'Unknown').substring(0, 26);
             const qty = item.quantity || 0;
-            doc.fillColor('#6b7280').fontSize(5.5).font('Helvetica')
+            doc.fillColor('#6b7280').fontSize(5).font('Helvetica')
                 .text(sku, px, iy, { width: pw, lineBreak: false });
-            iy += 7;
-            doc.fillColor('#000000').fontSize(7).font('Helvetica-Bold')
-                .text(name, px, iy, { width: pw - 16, lineBreak: false });
-            doc.fontSize(8.5).font('Helvetica-Bold')
+            iy += 6;
+            doc.fillColor('#000000').fontSize(6).font('Helvetica-Bold')
+                .text(name, px, iy, { width: pw - 14, lineBreak: false });
+            doc.fontSize(7).font('Helvetica-Bold')
                 .text(String(qty), px, iy, { width: pw, align: 'right', lineBreak: false });
-            iy += 9;
-            doc.fillColor('#374151').fontSize(6).font('Helvetica');
+            iy += 8;
+            doc.fontSize(5.5).font('Helvetica').fillColor('#374151');
             const binLabel = 'BIN : -';
             doc.text(binLabel, px, iy, { lineBreak: false });
-            doc.fontSize(6).font('Helvetica');
+            doc.fontSize(5.5).font('Helvetica');
             const binW = doc.widthOfString(binLabel);
-            const dashSX = px + binW + 3;
+            const dashSX = px + binW + 2;
             const dashEX = px + pw;
-            doc.dash(2, { space: 2 });
-            doc.moveTo(dashSX, iy + 4).lineTo(dashEX, iy + 4)
-                .strokeColor('#aaaaaa').lineWidth(0.5).stroke();
+            doc.dash(1.5, { space: 1.5 });
+            doc.moveTo(dashSX, iy + 3.5).lineTo(dashEX, iy + 3.5)
+                .strokeColor('#aaaaaa').lineWidth(0.4).stroke();
             doc.undash();
-            iy += 7;
-            doc.moveTo(DX + 3, iy).lineTo(LW - M - 3, iy)
-                .strokeColor('#e5e7eb').lineWidth(0.3).stroke();
-            iy += 3;
+            iy += 6;
+            doc.moveTo(DX + 2, iy).lineTo(LW - M - 2, iy).strokeColor('#e5e7eb').lineWidth(0.3).stroke();
+            iy += 2;
         }
-        const pfY = LH - M - 12;
+        const pfY = LH - M - 10;
         doc.moveTo(DX, pfY).lineTo(LW - M, pfY).strokeColor('#e5e7eb').lineWidth(0.3).stroke();
-        doc.fillColor('#9ca3af').fontSize(5.5).font('Helvetica')
-            .text('Powered by WMS 3PL System', px, pfY + 3, {
-            width: pw, align: 'center', lineBreak: false,
-        });
+        doc.fillColor('#9ca3af').fontSize(5).font('Helvetica')
+            .text('Powered by WMS 3PL System', px, pfY + 2, { width: pw, align: 'center', lineBreak: false });
     }
     async generateLabelPdf(outboundId) {
         const ob = await this.fetchOutbound(outboundId);

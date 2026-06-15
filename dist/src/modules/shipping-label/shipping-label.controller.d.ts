@@ -4,4 +4,7 @@ export declare class ShippingLabelController {
     private readonly labelService;
     constructor(labelService: ShippingLabelService);
     getLabel(outboundId: string, res: Response, sellerId?: string): Promise<void>;
+    getBulkLabels(body: {
+        outboundIds: string[];
+    }, res: Response, sellerId?: string): Promise<void>;
 }

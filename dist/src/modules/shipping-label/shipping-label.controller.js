@@ -35,6 +35,23 @@ let ShippingLabelController = class ShippingLabelController {
         res.setHeader('Content-Disposition', `attachment; filename=label_${checkOutbound?.outboundNo}.pdf`);
         res.send(outbound);
     }
+    async getBulkLabels(body, res, sellerId) {
+        if (sellerId) {
+            const outbounds = await this.labelService['prisma'].outbound.findMany({
+                where: { id: { in: body.outboundIds } },
+                select: { sellerId: true, outboundNo: true },
+            });
+            const unauthorized = outbounds.filter((o) => o.sellerId !== sellerId);
+            if (unauthorized.length > 0) {
+                throw new common_1.ForbiddenException('Tenant Isolation: You cannot access shipping labels for another seller');
+            }
+        }
+        const pdfBuffer = await this.labelService.generateBulkLabelPdf(body.outboundIds);
+        const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename=bulk_labels_${timestamp}_${body.outboundIds.length}orders.pdf`);
+        res.send(pdfBuffer);
+    }
 };
 exports.ShippingLabelController = ShippingLabelController;
 __decorate([
@@ -47,6 +64,16 @@ __decorate([
     __metadata("design:paramtypes", [String, Object, String]),
     __metadata("design:returntype", Promise)
 ], ShippingLabelController.prototype, "getLabel", null);
+__decorate([
+    (0, common_1.Post)('bulk'),
+    (0, swagger_1.ApiOperation)({ summary: 'Bulk download shipping labels as a single merged PDF (one label per page)' }),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Res)()),
+    __param(2, (0, current_user_decorator_1.CurrentUser)('sellerId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object, String]),
+    __metadata("design:returntype", Promise)
+], ShippingLabelController.prototype, "getBulkLabels", null);
 exports.ShippingLabelController = ShippingLabelController = __decorate([
     (0, swagger_1.ApiTags)('Outbound'),
     (0, swagger_1.ApiBearerAuth)('JWT'),

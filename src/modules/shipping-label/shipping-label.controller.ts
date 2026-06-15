@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Res, UseGuards, ForbiddenException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Res, UseGuards, ForbiddenException } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { ShippingLabelService } from './shipping-label.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
@@ -20,10 +20,8 @@ export class ShippingLabelController {
     @Res() res: Response,
     @CurrentUser('sellerId') sellerId?: string,
   ) {
-    // Retrieve outbound to verify owner
     const outbound = await this.labelService.generateLabelPdf(outboundId);
 
-    // If user is seller, verify ownership before sending PDF
     const checkOutbound = await this.labelService['prisma'].outbound.findUnique({
       where: { id: outboundId },
     });
@@ -35,4 +33,32 @@ export class ShippingLabelController {
     res.setHeader('Content-Disposition', `attachment; filename=label_${checkOutbound?.outboundNo}.pdf`);
     res.send(outbound);
   }
+
+  @Post('bulk')
+  @ApiOperation({ summary: 'Bulk download shipping labels as a single merged PDF (one label per page)' })
+  async getBulkLabels(
+    @Body() body: { outboundIds: string[] },
+    @Res() res: Response,
+    @CurrentUser('sellerId') sellerId?: string,
+  ) {
+    // If seller user, verify all orders belong to them
+    if (sellerId) {
+      const outbounds = await this.labelService['prisma'].outbound.findMany({
+        where: { id: { in: body.outboundIds } },
+        select: { sellerId: true, outboundNo: true },
+      });
+      const unauthorized = outbounds.filter((o) => o.sellerId !== sellerId);
+      if (unauthorized.length > 0) {
+        throw new ForbiddenException('Tenant Isolation: You cannot access shipping labels for another seller');
+      }
+    }
+
+    const pdfBuffer = await this.labelService.generateBulkLabelPdf(body.outboundIds);
+    const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename=bulk_labels_${timestamp}_${body.outboundIds.length}orders.pdf`);
+    res.send(pdfBuffer);
+  }
 }
+

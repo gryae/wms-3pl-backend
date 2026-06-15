@@ -197,9 +197,12 @@ let InboundService = class InboundService {
         if (inbound.status !== client_1.InboundStatus.RECEIVING) {
             throw new common_1.BadRequestException('Only inbounds currently in RECEIVING status can be completed');
         }
-        const hasAnyQty = inbound.items.some((item) => item.receivedQty > 0 || item.rejectQty > 0);
-        if (!hasAnyQty) {
-            throw new common_1.BadRequestException('Cannot finalize: please record received and/or rejected quantities for at least one item before completing.');
+        const incompleteItems = inbound.items.filter((item) => item.receivedQty + item.rejectQty !== item.expectedQty);
+        if (incompleteItems.length > 0) {
+            const details = incompleteItems
+                .map((item) => `SKU ${item.product.sku}: expected ${item.expectedQty}, counted ${item.receivedQty + item.rejectQty} (${item.receivedQty} good + ${item.rejectQty} bad)`)
+                .join('; ');
+            throw new common_1.BadRequestException(`Cannot finalize: physical count does not match expected quantity for the following item(s): ${details}`);
         }
         const updated = await this.prisma.$transaction(async (tx) => {
             const header = await tx.inbound.update({

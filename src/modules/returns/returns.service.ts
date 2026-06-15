@@ -35,20 +35,28 @@ export class ReturnsService {
     const returnNo = `${prefix}-${dateStr}-${seq}`;
 
     // Verify outbound if linked
+    let actualOutboundId = outboundId;
     if (outboundId) {
-      const outbound = await this.prisma.outbound.findUnique({ where: { id: outboundId } });
+      const outbound = await this.prisma.outbound.findFirst({ 
+        where: { 
+          OR: [
+            { id: outboundId },
+            { outboundNo: outboundId }
+          ]
+        } 
+      });
       if (!outbound) {
         throw new NotFoundException('Linked outbound order not found');
       }
+      actualOutboundId = outbound.id;
     }
 
     const retObj = await this.prisma.$transaction(async (tx) => {
-      // 1. Create return header
       const header = await tx.return.create({
         data: {
           returnNo,
           sellerId,
-          outboundId,
+          outboundId: actualOutboundId,
           reason,
           notes,
           status: ReturnStatus.SUBMITTED,
